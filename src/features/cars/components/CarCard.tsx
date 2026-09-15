@@ -1,68 +1,77 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDndContext, useDroppable } from '@dnd-kit/core'
 import { AnimatedNumber } from '../../../components/ui/AnimatedNumber'
-import { CarIcon, ChevronDownIcon } from '../../../components/ui/Icons'
+import { ChevronDownIcon } from '../../../components/ui/Icons'
 import { EASE_OUT, prefersReducedMotion } from '../../../lib/motion'
 import { carDropId } from '../dnd'
 import type { DragData, DropData } from '../dnd'
-import { formatCurrency } from '../lib/format'
+import { formatAmount } from '../lib/format'
 import { getCarTotal, getCarUnitCount } from '../lib/pricing'
 import { useCars } from '../state/CarsContext'
-import type { Car } from '../types'
+import type { Car, ProductInput } from '../types'
 import { AddProductForm } from './AddProductForm'
 import { ProductTable } from './ProductTable'
+import type { RowFlash } from './ProductTable'
 
 interface CarCardProps {
   car: Car
   expanded: boolean
   onToggle: (carId: string) => void
-  /** Changes every time something is dropped on this car, to play the "caught it" pulse. */
-  dropPulse: number
+  /** Set by drag & drop on the board: which row received the drop (pulse + row wash). */
+  dropFlash: RowFlash | null
 }
 
-/** A car with its total in the header; unfolds to show and edit its products. Also a drop target. */
-export function CarCard({ car, expanded, onToggle, dropPulse }: CarCardProps) {
+/** One vehicle as a ruled sheet section: total in the header, lines unfold below. Also a drop target. */
+export function CarCard({ car, expanded, onToggle, dropFlash }: CarCardProps) {
   const { addProduct, updateProduct, deleteProduct } = useCars()
-  const articleRef = useRef<HTMLElement | null>(null)
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const [formFlash, setFormFlash] = useState<RowFlash | null>(null)
 
   const dropData: DropData = { carId: car.id, carName: car.name }
   const { setNodeRef, isOver } = useDroppable({ id: carDropId(car.id), data: dropData })
 
-  // Highlight cars that can accept what is being dragged (a product can't be dropped on its own car).
+  // Highlight vehicles that can accept what is being dragged (a line can't be dropped on its own vehicle).
   const { active } = useDndContext()
   const dragging = active?.data.current as DragData | undefined
   const canAccept = dragging !== undefined && !(dragging.type === 'product' && dragging.carId === car.id)
   const isTarget = canAccept && isOver
 
-  // Drop feedback: an outline ripples out from the card that received the product.
+  // Drop feedback: a cobalt outline ripples out from the section that received the part.
   useEffect(() => {
-    if (!dropPulse || !articleRef.current || prefersReducedMotion()) return
-    articleRef.current.animate(
+    if (!dropFlash || !sectionRef.current || prefersReducedMotion()) return
+    sectionRef.current.animate(
       [
-        { outline: '2px solid rgb(47 124 246 / 0.7)', outlineOffset: '0px' },
-        { outline: '2px solid rgb(47 124 246 / 0)', outlineOffset: '14px' },
+        { outline: '2px solid rgb(0 71 171 / 0.8)', outlineOffset: '0px' },
+        { outline: '2px solid rgb(0 71 171 / 0)', outlineOffset: '12px' },
       ],
-      { duration: 650, easing: EASE_OUT },
+      { duration: 620, easing: EASE_OUT },
     )
-  }, [dropPulse])
+  }, [dropFlash])
 
-  const bodyId = `car-body-${car.id}`
-  const productCount = car.products.length
+  const handleAdd = (input: ProductInput) => {
+    const outcome = addProduct(car.id, input)
+    if (outcome.merged) setFormFlash({ productId: outcome.productId, nonce: Date.now() })
+    return outcome
+  }
+
+  const flash = [dropFlash, formFlash].filter(Boolean).sort((a, b) => b!.nonce - a!.nonce)[0] ?? null
+  const bodyId = `vehicle-body-${car.id}`
+  const lineCount = car.products.length
   const unitCount = getCarUnitCount(car)
 
   return (
     <article
       ref={(node) => {
-        articleRef.current = node
+        sectionRef.current = node
         setNodeRef(node)
       }}
       aria-label={car.name}
-      className={`overflow-hidden rounded-2xl border bg-white transition-[border-color,box-shadow,scale] duration-200 ease-[var(--ease-out)] ${
+      className={`border-t-2 transition-colors duration-200 ${
         isTarget
-          ? 'scale-[1.01] border-brand-500 shadow-[0_12px_28px_-14px_rgb(31_99_216/0.45)] ring-4 ring-brand-100'
+          ? 'border-cobalt-600 bg-cobalt-50 outline-2 outline-cobalt-600'
           : canAccept
-            ? 'border-dashed border-brand-500/60 shadow-xs'
-            : 'border-slate-200 shadow-xs'
+            ? 'border-ink-950 outline-1 outline-dashed outline-ink-400 outline-offset-2'
+            : 'border-ink-950'
       }`}
     >
       <h2>
@@ -71,44 +80,38 @@ export function CarCard({ car, expanded, onToggle, dropPulse }: CarCardProps) {
           aria-expanded={expanded}
           aria-controls={bodyId}
           onClick={() => onToggle(car.id)}
-          className="group flex w-full items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-slate-50/80 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-500 sm:px-5"
+          className="group grid w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-x-3 py-3.5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt-600 sm:gap-x-5 sm:px-1"
         >
-          <span
-            className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl transition-colors duration-200 ${
-              isTarget ? 'bg-brand-600 text-white' : 'bg-brand-50 text-brand-600'
-            }`}
-          >
-            <CarIcon />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block font-semibold break-words text-slate-900">{car.name}</span>
-            <span className="block text-xs text-slate-500">
+          <span className="min-w-0">
+            <span className="block text-[1.0625rem] font-semibold leading-snug text-ink-950">{car.name}</span>
+            <span className="figures block text-xs text-ink-600">
               {isTarget ? (
-                <span className="font-medium text-brand-700">Release to add to this car</span>
+                <span className="font-semibold text-cobalt-700">Release to add to this vehicle</span>
               ) : (
                 <>
-                  {productCount} {productCount === 1 ? 'product' : 'products'} · {unitCount}{' '}
-                  {unitCount === 1 ? 'unit' : 'units'}
+                  {lineCount} {lineCount === 1 ? 'line' : 'lines'} · {unitCount} {unitCount === 1 ? 'unit' : 'units'}
                 </>
               )}
             </span>
           </span>
           <span className="text-right">
-            <span className="block text-xs text-slate-500">Total</span>
-            <AnimatedNumber value={getCarTotal(car)} format={formatCurrency} className="block font-bold text-slate-900" />
+            <span className="spec-label block">Total, EGP</span>
+            <AnimatedNumber value={getCarTotal(car)} format={formatAmount} className="block text-lg font-bold text-ink-950" />
           </span>
-          <ChevronDownIcon
-            className={`shrink-0 text-slate-400 transition-transform duration-300 ease-[var(--ease-out)] group-hover:text-slate-600 ${
-              expanded ? 'rotate-180' : ''
-            }`}
-          />
+          <span className="grid h-8 w-8 place-items-center border border-ink-200 text-ink-700 transition-colors group-hover:border-ink-950 group-hover:bg-ink-950 group-hover:text-white">
+            <ChevronDownIcon
+              width={16}
+              height={16}
+              className={`transition-transform duration-300 ease-[var(--ease-out)] ${expanded ? 'rotate-180' : ''}`}
+            />
+          </span>
         </button>
       </h2>
 
       {/*
-        Unfold: the body's grid row animates 0fr ↔ 1fr, so the card grows to the table's real height
-        without measuring. The content itself drifts down into place as it's revealed. Collapsing is
-        quicker than expanding. `inert` keeps folded controls out of the tab order.
+        Unfold: the body's grid row animates 0fr ↔ 1fr, so the section grows to the table's real height
+        without measuring, and the content drifts down into place. Collapsing is quicker than expanding.
+        `inert` keeps folded controls out of the tab order.
       */}
       <div
         id={bodyId}
@@ -119,7 +122,7 @@ export function CarCard({ car, expanded, onToggle, dropPulse }: CarCardProps) {
       >
         <div className="min-h-0 overflow-hidden">
           <div
-            className={`flex flex-col gap-4 border-t border-slate-100 px-2 py-4 transition-[translate,opacity] motion-reduce:transition-opacity sm:px-4 ${
+            className={`flex flex-col gap-3 pb-6 transition-[translate,opacity] motion-reduce:transition-opacity ${
               expanded
                 ? 'translate-y-0 opacity-100 delay-[40ms] duration-[380ms] ease-[var(--ease-out)]'
                 : '-translate-y-3 opacity-0 duration-[180ms] ease-[var(--ease-in)]'
@@ -129,10 +132,11 @@ export function CarCard({ car, expanded, onToggle, dropPulse }: CarCardProps) {
               carId={car.id}
               carName={car.name}
               products={car.products}
+              flash={flash}
               onUpdate={(productId, patch) => updateProduct(car.id, productId, patch)}
               onDelete={(productId) => deleteProduct(car.id, productId)}
             />
-            <AddProductForm carName={car.name} onAdd={(input) => addProduct(car.id, input)} />
+            <AddProductForm carName={car.name} onAdd={handleAdd} />
           </div>
         </div>
       </div>

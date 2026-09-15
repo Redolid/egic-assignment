@@ -2,23 +2,29 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatedNumber } from '../../../components/ui/AnimatedNumber'
 import { PackageIcon } from '../../../components/ui/Icons'
 import { EASE_OUT, prefersReducedMotion } from '../../../lib/motion'
-import { formatCurrency } from '../lib/format'
+import { formatAmount } from '../lib/format'
 import { getCarTotal } from '../lib/pricing'
 import type { Product, ProductInput } from '../types'
 import { ProductRow } from './ProductRow'
+
+export interface RowFlash {
+  productId: string
+  nonce: number
+}
 
 interface ProductTableProps {
   carId: string
   carName: string
   products: Product[]
+  flash: RowFlash | null
   onUpdate: (productId: string, patch: Partial<ProductInput>) => void
   onDelete: (productId: string) => void
 }
 
 /**
  * Keeps rows spatially continuous when the list changes: rows that shift because a product was
- * removed glide to their new place (FLIP), and ids that weren't here on the previous render are
- * reported as new so they can play their arrival wash.
+ * removed glide to their new place (FLIP), and ids that weren't here before are reported as new so
+ * they can play their arrival wash.
  */
 function useRowMotion(products: Product[]) {
   const tbodyRef = useRef<HTMLTableSectionElement>(null)
@@ -58,63 +64,80 @@ function useRowMotion(products: Product[]) {
 }
 
 /**
- * Product Name | Quantity | Unit Price | Subtotal, with the car total in the footer.
- * A real <table> on ≥640px; below that each row is restyled as a stacked card.
+ * Line | Qty | Unit price | Subtotal, totalled in the footer. Inspecting the total draws a
+ * dimension bracket down the subtotal column: the figures it sums.
+ * A real <table> on ≥640px; below that each row is restyled as a stacked entry.
  */
-export function ProductTable({ carId, carName, products, onUpdate, onDelete }: ProductTableProps) {
+export function ProductTable({ carId, carName, products, flash, onUpdate, onDelete }: ProductTableProps) {
   const { tbodyRef, newIds } = useRowMotion(products)
+  const [summing, setSumming] = useState(false)
 
   if (products.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-slate-200 px-4 py-8 text-center">
-        <PackageIcon width={22} height={22} className="text-slate-300" />
-        <p className="text-sm font-medium text-slate-600">No products on this car yet</p>
-        <p className="text-xs text-slate-500">Drag one from the catalog onto this card, or add it with the form below.</p>
+      <div className="flex items-center gap-4 border border-dashed border-ink-300 px-4 py-6">
+        <PackageIcon width={22} height={22} className="shrink-0 text-ink-400" />
+        <div>
+          <p className="text-sm font-semibold text-ink-900">No lines on this vehicle yet</p>
+          <p className="mt-0.5 text-[0.8125rem] text-ink-600">Drag a part from the parts list onto this section, or add a line below.</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <table className="block w-full text-sm sm:table sm:table-fixed">
-      <caption className="sr-only">Products of {carName}</caption>
-      <thead className="hidden border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-500 sm:table-header-group">
+    <table data-summing={summing} className="block w-full text-sm sm:table sm:table-fixed">
+      <caption className="sr-only">Lines of {carName}</caption>
+      <thead className="hidden border-b border-ink-950 sm:table-header-group">
         <tr>
-          <th scope="col" className="py-2 pl-10 pr-3 text-left font-medium">
-            Product Name
+          <th scope="col" className="spec-label py-2 pl-12 pr-3 text-left">
+            Line
           </th>
-          <th scope="col" className="w-28 px-2 py-2 text-right font-medium">
-            Quantity
+          <th scope="col" className="spec-label w-28 px-2 py-2 text-right">
+            Qty
           </th>
-          <th scope="col" className="w-36 px-2 py-2 text-right font-medium">
-            Unit Price
+          <th scope="col" className="spec-label w-36 px-2 py-2 text-right">
+            Unit price, EGP
           </th>
-          <th scope="col" className="w-36 px-2 py-2 text-right font-medium">
-            Subtotal
+          <th scope="col" className="spec-label w-36 py-2 pl-2 pr-3 text-right">
+            Subtotal, EGP
           </th>
-          <th scope="col" className="w-14 py-2 pr-2">
+          <th scope="col" className="w-11 py-2">
             <span className="sr-only">Actions</span>
           </th>
         </tr>
       </thead>
       <tbody ref={tbodyRef} className="block sm:table-row-group">
-        {products.map((product) => (
+        {products.map((product, index) => (
           <ProductRow
             key={product.id}
             carId={carId}
             product={product}
+            lineNumber={index + 1}
             isNew={newIds.has(product.id)}
+            flashNonce={flash?.productId === product.id ? flash.nonce : 0}
             onUpdate={onUpdate}
             onDelete={onDelete}
           />
         ))}
       </tbody>
-      <tfoot className="block border-t-2 border-slate-200 sm:table-footer-group">
-        <tr className="flex items-center justify-between px-3 py-3 sm:table-row sm:p-0">
-          <th scope="row" colSpan={3} className="text-left font-semibold text-slate-700 sm:py-3 sm:pl-10">
-            Total
+      <tfoot className="block border-t-2 border-ink-950 sm:table-footer-group">
+        <tr className="flex items-center justify-between py-3 sm:table-row sm:p-0">
+          <th scope="row" colSpan={3} className="text-left sm:py-3 sm:pl-12">
+            <span className="font-semibold text-ink-950">Total</span>
+            <span className="ml-2 text-xs text-ink-600">
+              Σ of {products.length} {products.length === 1 ? 'line' : 'lines'}
+            </span>
           </th>
-          <td className="text-right text-base font-bold text-slate-900 sm:px-2 sm:py-3">
-            <AnimatedNumber value={getCarTotal({ products })} format={formatCurrency} />
+          <td
+            tabIndex={0}
+            onMouseEnter={() => setSumming(true)}
+            onMouseLeave={() => setSumming(false)}
+            onFocus={() => setSumming(true)}
+            onBlur={() => setSumming(false)}
+            title="Sum of the subtotal column"
+            className="text-right text-lg font-bold text-ink-950 outline-none focus-visible:ring-2 focus-visible:ring-cobalt-600 sm:py-3 sm:pl-2 sm:pr-3"
+          >
+            <AnimatedNumber value={getCarTotal({ products })} format={formatAmount} />
           </td>
           <td className="hidden sm:table-cell" />
         </tr>

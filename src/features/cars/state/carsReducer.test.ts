@@ -64,6 +64,35 @@ describe('carsReducer', () => {
     ).toBe(state)
   })
 
+  it('merges an add of the same product (name + price) into the existing row', () => {
+    const next = carsReducer(makeState(), {
+      type: 'ADD_PRODUCT',
+      carId: 'c1',
+      product: { id: 'p9', name: 'oil filter', quantity: 1, unitPrice: 185.5 },
+    })
+    expect(next[0].products).toHaveLength(2)
+    expect(next[0].products[0]).toEqual({ id: 'p1', name: 'Oil Filter', quantity: 2, unitPrice: 185.5 })
+  })
+
+  it('keeps a same-name product with a different price as its own row', () => {
+    const next = carsReducer(makeState(), {
+      type: 'ADD_PRODUCT',
+      carId: 'c1',
+      product: { id: 'p9', name: 'Oil Filter', quantity: 1, unitPrice: 199 },
+    })
+    expect(next[0].products.map((p) => p.id)).toEqual(['p1', 'p2', 'p9'])
+  })
+
+  it('combines quantities when moving a product onto a car that already has it', () => {
+    const state: Car[] = [
+      makeState()[0],
+      { id: 'c2', name: 'Hyundai Elantra 2022', products: [{ id: 'p5', name: 'Air Filter', quantity: 3, unitPrice: 320 }] },
+    ]
+    const next = carsReducer(state, { type: 'MOVE_PRODUCT', fromCarId: 'c1', toCarId: 'c2', productId: 'p2' })
+    expect(next[0].products.map((p) => p.id)).toEqual(['p1'])
+    expect(next[1].products).toEqual([{ id: 'p5', name: 'Air Filter', quantity: 5, unitPrice: 320 }])
+  })
+
   it('resets to the given cars', () => {
     const seed = makeState()
     const next = carsReducer([], { type: 'RESET', cars: seed })

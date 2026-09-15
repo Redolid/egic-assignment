@@ -11,7 +11,11 @@ interface EditableNumberCellProps {
   validate: (raw: string) => ValidationResult<number>
   onCommit: (value: number) => void
   inputMode: 'numeric' | 'decimal'
+  /** How the value is shown when not being typed, e.g. prices with two decimals. */
+  formatValue?: (value: number) => string
 }
+
+const plain = (value: number) => String(value)
 
 /**
  * Inline number editor.
@@ -20,19 +24,19 @@ interface EditableNumberCellProps {
  * - Invalid text shows an error and is NOT committed; on blur / Escape the
  *   draft reverts to the last valid value, with a brief flash so the undo is noticed.
  */
-export function EditableNumberCell({ value, label, validate, onCommit, inputMode }: EditableNumberCellProps) {
+export function EditableNumberCell({ value, label, validate, onCommit, inputMode, formatValue = plain }: EditableNumberCellProps) {
   const errorId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [draft, setDraft] = useState(String(value))
+  const [draft, setDraft] = useState(formatValue(value))
   const [error, setError] = useState<string | null>(null)
 
-  // Sync the draft when the value changes from outside (e.g. "Reset demo data").
+  // Sync the draft when the value changes from outside (e.g. a merge or "Reset demo data").
   // Typing "12." commits 12, so Number(draft) === value and the draft is kept.
   const [syncedValue, setSyncedValue] = useState(value)
   if (value !== syncedValue) {
     setSyncedValue(value)
     if (Number(draft) !== value) {
-      setDraft(String(value))
+      setDraft(formatValue(value))
       setError(null)
     }
   }
@@ -49,12 +53,12 @@ export function EditableNumberCell({ value, label, validate, onCommit, inputMode
   }
 
   const revert = () => {
-    setDraft(String(value))
+    setDraft(formatValue(value))
     setError(null)
-    inputRef.current?.animate(
-      [{ backgroundColor: '#fef3c7' }, { backgroundColor: '#ffffff' }],
-      { duration: prefersReducedMotion() ? 400 : 700, easing: 'ease-out' },
-    )
+    inputRef.current?.animate([{ backgroundColor: '#fdf4e4' }, { backgroundColor: '#ffffff' }], {
+      duration: prefersReducedMotion() ? 400 : 700,
+      easing: 'ease-out',
+    })
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -79,12 +83,12 @@ export function EditableNumberCell({ value, label, validate, onCommit, inputMode
         aria-invalid={Boolean(error)}
         aria-describedby={error ? errorId : undefined}
         onChange={(event) => handleChange(event.target.value)}
-        onBlur={() => error && revert()}
+        onBlur={() => (error ? revert() : setDraft(formatValue(value)))}
         onKeyDown={handleKeyDown}
-        className={`h-9 w-28 rounded-md border bg-white px-2 text-right text-sm tabular-nums text-slate-900 outline-none transition-[border-color,box-shadow] duration-200 focus:ring-4 sm:w-full ${
+        className={`figures h-8 w-28 rounded-[3px] border bg-white px-2 text-right text-sm text-ink-950 outline-none transition-[border-color,box-shadow] duration-200 focus:ring-[3px] sm:w-full ${
           error
-            ? 'border-red-400 focus:border-red-500 focus:ring-red-100'
-            : 'border-slate-200 hover:border-slate-300 focus:border-brand-500 focus:ring-brand-100'
+            ? 'border-fail-600 focus:ring-fail-600/15'
+            : 'border-ink-200 hover:border-ink-400 focus:border-cobalt-600 focus:ring-cobalt-600/15'
         }`}
       />
       <FieldMessage id={errorId} message={error} align="end" live />

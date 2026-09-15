@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { AnimatedNumber } from '../../../components/ui/AnimatedNumber'
 import { Button } from '../../../components/ui/Button'
@@ -6,7 +6,7 @@ import { GripIcon, TrashIcon } from '../../../components/ui/Icons'
 import { EASE_IN, prefersReducedMotion } from '../../../lib/motion'
 import { productDragId } from '../dnd'
 import type { DragData } from '../dnd'
-import { formatCurrency } from '../lib/format'
+import { formatAmount } from '../lib/format'
 import { getSubtotal } from '../lib/pricing'
 import { validatePrice, validateQuantity } from '../lib/validation'
 import type { Product, ProductInput } from '../types'
@@ -15,18 +15,21 @@ import { EditableNumberCell } from './EditableNumberCell'
 interface ProductRowProps {
   carId: string
   product: Product
+  lineNumber: number
   /** Just added or moved here: plays the arrival wash once. */
   isNew: boolean
+  /** Changes when this row absorbs a merged add or move, to wash it again. */
+  flashNonce: number
   onUpdate: (productId: string, patch: Partial<ProductInput>) => void
   onDelete: (productId: string) => void
 }
 
-/** Mobile label shown next to a value when the table collapses into cards. */
+/** Mobile label shown next to a value when the table collapses into stacked rows. */
 const MobileLabel = ({ children }: { children: string }) => (
-  <span className="pt-2 text-xs font-medium uppercase tracking-wide text-slate-400 sm:hidden">{children}</span>
+  <span className="spec-label pt-2 sm:hidden">{children}</span>
 )
 
-export function ProductRow({ carId, product, isNew, onUpdate, onDelete }: ProductRowProps) {
+export function ProductRow({ carId, product, lineNumber, isNew, flashNonce, onUpdate, onDelete }: ProductRowProps) {
   const rowRef = useRef<HTMLTableRowElement | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   // Captured at mount: later re-renders (toast, drag state) must not cut the arrival wash short.
@@ -38,7 +41,16 @@ export function ProductRow({ carId, product, isNew, onUpdate, onDelete }: Produc
     disabled: isDeleting,
   })
 
-  // The row slides out toward the delete button before it is removed; rows below then close the gap (FLIP in ProductTable).
+  // A merge landed on this row: wash it so the quantity change is traced to the right line.
+  useEffect(() => {
+    if (!flashNonce || !rowRef.current) return
+    rowRef.current.animate([{ backgroundColor: '#dae5f7' }, { backgroundColor: 'rgba(218,229,247,0)' }], {
+      duration: prefersReducedMotion() ? 600 : 1400,
+      easing: 'ease-out',
+    })
+  }, [flashNonce])
+
+  // The row slides out before it is removed; rows below then close the gap (FLIP in ProductTable).
   const handleDelete = async () => {
     if (isDeleting) return
     setIsDeleting(true)
@@ -62,28 +74,29 @@ export function ProductRow({ carId, product, isNew, onUpdate, onDelete }: Produc
         setNodeRef(node)
       }}
       data-flip-id={product.id}
-      className={`relative block border-b border-slate-100 px-3 py-3 transition-opacity duration-200 last:border-b-0 sm:table-row sm:px-0 sm:py-0 ${
-        isDragging ? 'opacity-40' : ''
+      className={`relative block border-b border-ink-200 px-1 py-3 transition-opacity duration-200 sm:table-row sm:p-0 ${
+        isDragging ? 'opacity-35' : ''
       } ${playArrival ? 'animate-row-arrive' : ''}`}
     >
-      <td className="block pr-10 sm:table-cell sm:py-2 sm:pl-2 sm:pr-3">
+      <td className="block pr-10 sm:table-cell sm:py-1.5 sm:pl-0 sm:pr-3">
         <div className="flex items-center gap-2">
           <button
             ref={setActivatorNodeRef}
             type="button"
-            aria-label={`Drag ${product.name} to another car`}
-            className="grid h-8 w-6 shrink-0 cursor-grab touch-manipulation select-none place-items-center rounded text-slate-300 transition-colors [-webkit-touch-callout:none] hover:bg-slate-100 hover:text-slate-500 focus-visible:outline-2 focus-visible:outline-brand-500 active:cursor-grabbing"
+            aria-label={`Drag ${product.name} to another vehicle`}
+            className="grid h-8 w-5 shrink-0 cursor-grab touch-manipulation select-none place-items-center text-ink-300 transition-colors [-webkit-touch-callout:none] hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-cobalt-600 active:cursor-grabbing"
             {...attributes}
             {...listeners}
           >
-            <GripIcon width={16} height={16} />
+            <GripIcon width={14} height={14} />
           </button>
-          <span className="font-medium break-words text-slate-800">{product.name}</span>
+          <span className="figures w-5 text-right text-xs font-medium text-ink-500">{lineNumber}</span>
+          <span className="font-medium break-words text-ink-950">{product.name}</span>
         </div>
       </td>
 
-      <td className="flex items-start justify-between gap-3 pt-2 sm:table-cell sm:px-2 sm:py-2 sm:align-top">
-        <MobileLabel>Quantity</MobileLabel>
+      <td className="flex items-start justify-between gap-3 pt-2 sm:table-cell sm:px-2 sm:py-1.5 sm:align-top">
+        <MobileLabel>Qty</MobileLabel>
         <EditableNumberCell
           value={product.quantity}
           label={`Quantity of ${product.name}`}
@@ -93,36 +106,36 @@ export function ProductRow({ carId, product, isNew, onUpdate, onDelete }: Produc
         />
       </td>
 
-      <td className="flex items-start justify-between gap-3 pt-2 sm:table-cell sm:px-2 sm:py-2 sm:align-top">
-        <MobileLabel>Unit price</MobileLabel>
+      <td className="flex items-start justify-between gap-3 pt-2 sm:table-cell sm:px-2 sm:py-1.5 sm:align-top">
+        <MobileLabel>Unit price, EGP</MobileLabel>
         <EditableNumberCell
           value={product.unitPrice}
           label={`Unit price of ${product.name}`}
           inputMode="decimal"
+          formatValue={(price) => price.toFixed(2)}
           validate={validatePrice}
           onCommit={(unitPrice) => onUpdate(product.id, { unitPrice })}
         />
       </td>
 
-      <td className="flex items-center justify-between gap-3 pt-2 sm:table-cell sm:px-2 sm:py-2 sm:text-right">
-        <span className="text-xs font-medium uppercase tracking-wide text-slate-400 sm:hidden">Subtotal</span>
-        <AnimatedNumber
-          value={getSubtotal(product)}
-          format={formatCurrency}
-          className="font-semibold text-slate-900 sm:leading-9"
-        />
+      <td
+        data-col="subtotal"
+        className="flex items-center justify-between gap-3 pt-2 transition-[box-shadow,color] duration-200 sm:table-cell sm:py-1.5 sm:pl-2 sm:pr-3 sm:text-right"
+      >
+        <MobileLabel>Subtotal, EGP</MobileLabel>
+        <AnimatedNumber value={getSubtotal(product)} format={formatAmount} className="font-semibold sm:leading-8" />
       </td>
 
-      <td className="absolute right-2 top-2 sm:static sm:table-cell sm:py-2 sm:pr-2 sm:text-right">
+      <td className="absolute right-0 top-2 sm:static sm:table-cell sm:py-1.5 sm:text-right">
         <Button
           variant="danger"
           size="icon"
           aria-label={`Delete ${product.name}`}
-          title="Delete product"
+          title="Delete line"
           disabled={isDeleting}
           onClick={handleDelete}
         >
-          <TrashIcon width={18} height={18} />
+          <TrashIcon width={16} height={16} />
         </Button>
       </td>
     </tr>

@@ -1,27 +1,40 @@
-/** Contract between the browser and the `/api/read-id` endpoint (server/idReaderPlugin.ts). */
+/** Contract between the browser and the `/api/read-id` Claude endpoint (server/idReaderPlugin.ts). */
 
 export const READ_ID_ENDPOINT = '/api/read-id'
 
 /** GET /api/read-id */
 export interface ReaderStatus {
-  /** false when the server has no ANTHROPIC_API_KEY — the browser then uses Tesseract. */
+  /** false when the server has no ANTHROPIC_API_KEY. */
   available: boolean
 }
 
+export type UploadMediaType = 'image/jpeg' | 'image/png' | 'image/webp' | 'application/pdf'
+
 /** POST /api/read-id — body */
 export interface ReadIdRequest {
-  /** Base64 image data without the `data:` prefix. */
-  image: string
-  mediaType: 'image/jpeg' | 'image/png' | 'image/webp'
+  /** Base64 file data without the `data:` prefix. */
+  data: string
+  mediaType: UploadMediaType
 }
 
-/** POST /api/read-id — 200 response */
+/** POST /api/read-id — 200 response. Empty strings mean "not present or unreadable". */
 export interface ReadIdResponse {
-  isIdCardFront: boolean
-  /** Full name in Arabic as printed, or "" if unreadable. */
+  isEgyptianId: boolean
+  frontFound: boolean
+  backFound: boolean
   name: string
-  /** The 14 digits converted to 0-9, or "" if unreadable. */
-  nationalId: string
+  address: string
+  nationalIdFront: string
+  cardNumber: string
+  nationalIdBack: string
+  job: string
+  gender: 'male' | 'female' | ''
+  religion: string
+  maritalStatus: string
+  /** YYYY-MM */
+  issueDate: string
+  /** YYYY-MM-DD */
+  expiryDate: string
 }
 
 /** POST /api/read-id — error response */

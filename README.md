@@ -1,6 +1,6 @@
-# EGIC Web Developer Assignment
+# EGIC Operations Toolkit — Web Developer Assignment
 
-One React app with the three assignment tasks, each on its own page:
+One React app with the three assignment tasks, each on its own sheet:
 
 | Route          | Task                                          | Design & decisions                                               |
 | -------------- | --------------------------------------------- | ---------------------------------------------------------------- |
@@ -8,7 +8,7 @@ One React app with the three assignment tasks, each on its own page:
 | `/national-id` | Task 2 — Egyptian National ID Reader          | [docs/task-2-national-id.md](docs/task-2-national-id.md)         |
 | `/map`         | Task 3 — Map of EGIC Traders                  | [docs/task-3-traders-map.md](docs/task-3-traders-map.md)         |
 
-This README covers setup and the decisions shared by all three tasks. Each task doc explains that task's design, technical details and the reason behind every choice.
+This README covers setup and the decisions shared by all three tasks. Each task doc explains that task's design, technical details and the reason behind every choice. The visual system is recorded in [DESIGN.md](DESIGN.md); product context in [PRODUCT.md](PRODUCT.md).
 
 ## Stack
 
@@ -16,12 +16,13 @@ This README covers setup and the decisions shared by all three tasks. Each task 
 | --------------- | ----------------------------------------------- |
 | UI              | React 19 + TypeScript                           |
 | Build / dev     | Vite 8                                          |
-| Styling         | Tailwind CSS v4 (no component library)          |
+| Styling         | Tailwind CSS v4 with a custom token set (no component library) |
+| Type            | Archivo (variable, width axis) + IBM Plex Sans Arabic, self-hosted |
 | Routing         | React Router 7                                  |
 | Task 1          | @dnd-kit/core (drag & drop)                     |
-| Task 2          | Claude API (`@anthropic-ai/sdk`) with Tesseract.js fallback |
+| Task 2          | **Local deep-learning service** (Python · FastAPI · EasyOCR/PyTorch), optional Claude API, Tesseract.js fallback |
 | Task 3          | Leaflet + react-leaflet + OpenStreetMap tiles   |
-| Tests / lint    | Vitest, Oxlint                                  |
+| Tests / lint    | Vitest (web), pytest (service), Oxlint          |
 
 ## Getting started
 
@@ -32,87 +33,95 @@ npm install
 npm run dev          # http://localhost:5173
 ```
 
-### API keys
+Tasks 1 and 3 work immediately. Task 2 works immediately too (browser OCR), but reads accurately with one of the two optional engines below.
 
-| Task | Key needed? |
-| ---- | ----------- |
-| 1 — Cars | No |
-| 2 — National ID | **Optional.** With `ANTHROPIC_API_KEY`, cards are read by Claude, which is accurate. Without it, the page still works using on-device Tesseract OCR, but results are much less reliable (see the Task 2 doc). |
-| 3 — Map | No. Leaflet and OpenStreetMap need no key. |
+### Task 2 engines (optional)
 
-To enable Claude for Task 2:
+| Engine | What you need | Reads | Data leaves the PC? |
+| --- | --- | --- | --- |
+| **Local model** (recommended) | Python 3.10–3.12; GPU optional. Start `ml-service` — see [ml-service/README.md](ml-service/README.md) | Photos and PDFs, front and back, with text locations and confidences | No |
+| **Claude** | `ANTHROPIC_API_KEY` in `.env.local` (copy `.env.example`), then restart `npm run dev` | Photos and PDFs, front and back | Yes, to Anthropic's API |
+| **Browser OCR** | nothing | Front photos only; weak on Arabic-Indic digits | No |
+
+The page detects which engines are available and preselects the best one; you can switch at any time. Quick start for the local model:
 
 ```bash
-cp .env.example .env.local   # then set ANTHROPIC_API_KEY=...
-npm run dev                  # restart so the server picks up the key
+cd ml-service
+python -m venv .venv && .venv\Scripts\activate        # macOS/Linux: source .venv/bin/activate
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128   # or …/whl/cpu
+pip install -r requirements.txt
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8008
 ```
 
-The key is read only by the dev/preview server and never sent to the browser. `.env.local` is git-ignored.
+API keys stay on the server side (the Vite dev/preview server) and are never sent to the browser. `.env.local` is git-ignored.
 
 ### Scripts
 
 ```bash
-npm run dev        # dev server (includes the /api/read-id endpoint)
-npm test           # unit tests (59)
+npm run dev        # dev server (+ /api/read-id for Claude, + /api/ml proxy to the local model)
+npm test           # web unit tests (72)
 npm run build      # type-check (app + server) and production build to dist/
-npm run preview    # serve the production build (also includes /api/read-id)
+npm run preview    # serve the production build (same endpoints)
 npm run lint       # oxlint
+# in ml-service/:  python -m pytest -q   (17 tests)
 ```
 
 ## Project structure
 
 ```
+├── ml-service/                  # Task 2: local deep-learning ID reader (FastAPI, EasyOCR/PyTorch)
+│   ├── app/                     # documents · ocr (models) · layout · fields · pipeline · national_id · main
+│   └── tests/
 ├── server/
-│   └── idReaderPlugin.ts        # Task 2: /api/read-id endpoint (Vite dev + preview middleware)
+│   └── idReaderPlugin.ts        # Task 2: /api/read-id Claude endpoint (Vite dev + preview middleware)
 ├── src/
 │   ├── App.tsx                  # routes
-│   ├── routes.tsx               # nav order + preloadable lazy pages (Task 2 and 3)
+│   ├── routes.tsx               # register-tab order + preloadable lazy pages
 │   ├── lib/motion.ts            # shared easing, reduced-motion check, shake
 │   ├── components/
-│   │   ├── layout/AppLayout.tsx # header, navigation, view-transition page changes
-│   │   └── ui/                  # shared primitives: Button, TextField, FieldMessage, AnimatedNumber, Icons
+│   │   ├── layout/              # AppLayout (title block, register tabs, sheet transitions), SheetHeader
+│   │   └── ui/                  # Button, TextField, FieldMessage, AnimatedNumber, Icons
 │   ├── pages/                   # one thin page per route
-│   │   ├── CarsPage.tsx
-│   │   ├── NationalIdPage.tsx
-│   │   └── TradersMapPage.tsx
 │   └── features/                # everything specific to a task lives in its folder
 │       ├── cars/
 │       ├── national-id/
 │       └── traders-map/
-└── docs/                        # design documentation per task
+├── docs/                        # design and decisions per task
+├── DESIGN.md                    # visual system (tokens, rules, components)
+└── PRODUCT.md                   # users, purpose, constraints
 ```
 
 ## Shared decisions
 
 | Decision | Choice | Why | Alternatives considered |
 | --- | --- | --- | --- |
-| Project shape | **One app, three routes** | One install, one `npm run dev` and one README for the reviewer. The header, buttons and inputs are shared, so all three pages look consistent. | Three separate projects: triple the setup and duplicated layout code, with nothing gained. |
-| Framework | **React + TypeScript** | TypeScript makes the data models explicit (`Car`, `Product`, `Trader`, the API contract in Task 2) and catches mistakes at build time. React has mature libraries for all three tasks (dnd-kit, react-leaflet). | Vue or Angular would work too. Plain JS loses type safety on the calculations and the API contract. |
-| Build tool | **Vite** | Instant dev server, a simple config, and a plugin API. The plugin API let Task 2's small server endpoint live inside the same dev server, so no separate backend was needed. | CRA is deprecated. Next.js would work but is more framework than three pages need. |
-| Styling | **Tailwind CSS, no component library** | Responsive layouts come from utility classes (`sm:`/`lg:`), and each page keeps its markup and styling together. Three pages don't justify the size or visual lock-in of MUI. | MUI or another component library. Hand-written CSS modules. |
-| Folder structure | **Feature folders** (`features/<task>/…`) + thin `pages/` | Everything for one task sits in one place: types, pure logic, state, components and tests. Truly shared code lives in `components/ui`. | Grouping by type (`components/`, `hooks/`, `utils/` for all tasks) scatters each task across the tree. |
-| Pure logic outside components | Pricing, validation, ID parsing and data normalisation are plain functions in `lib/` | These are the parts graded for correctness. As pure functions they can be unit-tested without rendering anything. | Logic inside components, which can only be tested through the UI. |
-| Code splitting | **Lazy-load the Task 2 and Task 3 pages** | Leaflet (~165 KB) and the OCR code only download when those pages are opened. It takes two `lazy()` calls, with a `Suspense` fallback inside the layout so the header stays visible. | Loading one bundle everywhere slows down the Cars page for no reason. |
-| Tests | **Vitest on the pure logic** (59 tests) | Covers the risky parts: money rounding, validation rules, the reducer, ID structure and decoding, OCR text parsing, and data normalisation. It runs in under a second. | Component or E2E tests. The flows were checked manually in a browser at desktop and 375px widths instead, which is proportionate for this scale. |
-| Responsive design | Mobile-first Tailwind breakpoints | The assignment requires mobile support. Every page was checked at 375px for horizontal overflow. | — |
-| Typeface | **IBM Plex Sans + IBM Plex Sans Arabic**, self-hosted via Fontsource | Two of the three tools show Arabic names. Plex was designed with a matching Arabic companion, so Latin labels and Arabic data share one voice. Only the Latin and Arabic subsets download, and only when that text is on screen. | Inter: has no Arabic, so Arabic would fall back to a mismatched system font. System fonts: inconsistent across OSes. |
-| Motion | **Motion explains state; nothing decorates.** CSS for declarative states, Web Animations API for interruptible or measured effects, View Transitions for page changes. No animation library. | See the list below. Every animation is 150–400 ms with ease-out arrivals and faster exits, has a `prefers-reduced-motion` alternative (crossfades and colour changes instead of movement), and never gates correctness (e.g. animated totals always settle on the exact value). | Framer Motion: a sizeable dependency for effects the platform APIs handle. |
+| Project shape | **One app, three routes** | One install, one `npm run dev` and one README for the reviewer; header, controls and tokens are shared so the three tools read as one product. | Three separate projects: triple the setup and duplicated layout code. |
+| Framework | **React + TypeScript** | Types make the data models and API contracts explicit (`Car`, `Product`, `Trader`, the ID reader's field schema) and catch mistakes at build time. Mature libraries exist for all three tasks. | Vue or Angular would work too. Plain JS loses type safety on the calculations and contracts. |
+| Build tool | **Vite** | Instant dev server and a plugin API: Task 2's Claude endpoint lives inside the dev server and the local model is one proxy entry away, so reviewers run one command. | CRA is deprecated. Next.js is more framework than three sheets need. |
+| Visual world | **"The Product Data Sheet"** — ruled spec tables, register tabs, numbered balloons, condensed catalogue titles ([DESIGN.md](DESIGN.md)) | EGIC manufactures water supply and drainage products with a German-quality position; staff do exact, repetitive work. A catalogue data sheet is a world they know, and its devices (dimension lines, balloons that cross-reference) make derivation visible — the product's core need. Chosen from a structured direction round over a site-signage and an industrial-plate alternative. | The previous generic card dashboard (the anti-reference); a construction-signage system (louder, better at warnings than at dense data). |
+| Styling | **Tailwind CSS v4 + custom tokens** (ink, cobalt, stamps) | Responsive layout from utilities, tokens enforce the palette (cobalt only for action), no component library to fight the world's square forms. | MUI: rounded cards and elevation are exactly what the world rejects. |
+| Typeface | **Archivo** (width axis) **+ IBM Plex Sans Arabic** | One grotesk file gives condensed catalogue titles and readable table text; tabular figures for money and IDs. Arabic names and trader names get a designed Arabic face instead of a system fallback. | Inter (no Arabic, no width axis); system fonts (inconsistent across OSes). |
+| Folder structure | **Feature folders** + thin `pages/` | Everything for one task sits together: types, pure logic, state, components, tests. | Grouping by type scatters each task across the tree. |
+| Pure logic outside components | Pricing, merging, validation, ID parsing, checks, OCR parsing, normalisation are plain functions | These are the parts graded for correctness; pure functions are unit-tested without rendering. | Logic inside components, testable only through the UI. |
+| Code splitting | **Preloadable lazy pages** for Task 2 and 3 | Leaflet and the OCR client only load when needed; preloading on tab hover lets the sheet transition show the real page. | One bundle everywhere. |
+| Tests | **Vitest + pytest on logic** (72 + 17) | Covers money rounding, the merge rule, validation, the reducer, ID structure, cross-checks, both OCR parsers and data normalisation. Flows verified in a browser at desktop and 375 px. | Component/E2E tests: more setup than this scale needs. |
+| Motion | **Motion explains state; nothing decorates.** CSS, Web Animations API and View Transitions; no animation library | Every animation is 150–400 ms with ease-out arrivals and faster exits, has a reduced-motion alternative, and never gates correctness (animated totals always settle on the exact value). | Framer Motion: a sizeable dependency for effects the platform handles. |
 
 ### Motion map
 
 | Where | What moves | Why |
 | --- | --- | --- |
-| Page change | The old page leaves and the new one enters **in the direction of the chosen tab** (nav order = spatial order). The active-tab pill glides to the new tab. Pages are preloaded on hover so the transition shows the real page. | Keeps your bearings between the three tools. |
-| Car card | The body **unfolds** by animating its grid row (0fr → 1fr, so no height measuring), with the content drifting into place. Collapsing is quicker. Folded controls are `inert`. | Shows the table belongs to that car. |
-| Totals | Subtotals, car totals and the grand total **count to their new value** and flash the brand colour. | Makes the live recalculation visible as you type. |
-| Product rows | Added or moved rows arrive with a brand-colour wash. Deleted rows slide out, and the rows below glide up (FLIP). | Shows what changed and where it went. |
-| Drag & drop | The ghost tilts and lifts when picked up. The target card grows and says "Release to add". The receiving card ripples. A toast confirms. | Physical feedback for a physical gesture. |
-| Forms | Errors unfold under their field. A rejected submit shakes the invalid fields and focuses the first one. The Add button's plus turns into a check. An invalid inline edit flashes as it reverts. | Names the problem and confirms success without blocking. |
-| ID reader | A scan line sweeps the card while it's read. A valid number **splits into its parts** (century · birth date · governorate · sequence · check), and each decoded row lights up the digits it came from. | Waiting feels honest, and the ID structure is shown, not just stated. |
-| Map | List hover lifts the pin. Selection grows the pin and pings a ring. Popups open from their tip. One highlight slides through the list. | Keeps the list and map visibly in sync. |
+| Sheet change | The old sheet leaves and the new one enters **in the direction of the chosen register tab**; the black active tab slides across. | Keeps your bearings between the three tools. |
+| Vehicle section | The body **unfolds** by animating its grid row (0fr → 1fr); collapsing is quicker; folded controls are `inert`. | Shows the lines belong to that vehicle. |
+| Totals | Subtotals, vehicle totals and the grand total **count to their new value** with a cobalt flash; inspecting a total draws a bracket down the column it sums. | Makes live recalculation — and what it adds up — visible. |
+| Lines | Added, moved or merged lines wash cobalt; deleted lines slide out and the rest glide up (FLIP). | Shows what changed and where it went. |
+| Drag & drop | The part slip tilts and lifts; the target section outlines and says "Release to add"; the receiving section ripples; a toast states the result (including merged quantities). | Physical feedback for a physical gesture. |
+| Forms | Errors unfold under their field; a rejected submit shakes the invalid fields and focuses the first; the Add button turns into a green check with a receipt line. | Names the problem and confirms success without blocking. |
+| ID reader | A scan line sweeps the document while it is read; numbered balloons land on the fields the model located; verdict stamps press in when a check changes; a valid number splits into its dimensioned parts. | Waiting is honest, and every extracted value points to its source. |
+| Map | Register hover lifts the balloon; selection enlarges it in cobalt and pings a ring; popups open from their tip; one selection band slides through the register. | Keeps the list and map visibly in sync. |
 
 ## Assumptions (global)
 
 - Evaluated on a recent Chromium, Firefox or Safari. No legacy browser support.
-- No backend or database is required. The only server code is Task 2's endpoint, which runs inside Vite's dev/preview server. For production hosting, that function would move to a serverless function (see the Task 2 doc).
+- No database. Server code is limited to Task 2: the Claude endpoint inside Vite's dev/preview server and the optional local Python service. For production hosting, the Claude handler would move to a serverless function and the model service to a GPU host behind authentication.
 - Task-specific assumptions are listed in each task doc.

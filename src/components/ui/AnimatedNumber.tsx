@@ -35,7 +35,7 @@ export function AnimatedNumber({ value, format, className = '' }: AnimatedNumber
     }
 
     const restingColor = getComputedStyle(element).color
-    element.animate([{ color: '#1f63d8' }, { color: restingColor }], { duration: 900, easing: 'ease-out' })
+    element.animate([{ color: '#0047ab' }, { color: restingColor }], { duration: 900, easing: 'ease-out' })
 
     if (prefersReducedMotion()) {
       shown.current = value

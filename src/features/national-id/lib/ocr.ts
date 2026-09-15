@@ -1,6 +1,7 @@
 import { createWorker } from 'tesseract.js'
 
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+export const PDF_TYPE = 'application/pdf'
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
 const MIN_WIDTH = 400
 /** Tesseract reads best when text is ~30px+ high; a card scaled to this width gets there. */
@@ -8,13 +9,15 @@ const OCR_WIDTH = 1800
 
 export class ImageValidationError extends Error {}
 
-/** Cheap checks before decoding the file. */
-export function validateImageFile(file: File): void {
-  if (!ACCEPTED_TYPES.includes(file.type)) {
-    throw new ImageValidationError('Please upload a JPG, PNG or WebP image.')
+export const isPdf = (file: File) => file.type === PDF_TYPE
+
+/** Cheap checks before decoding the file. Photos and PDF scans are accepted. */
+export function validateUpload(file: File): void {
+  if (!IMAGE_TYPES.includes(file.type) && !isPdf(file)) {
+    throw new ImageValidationError('Upload a JPG, PNG or WebP photo, or a PDF scan.')
   }
   if (file.size > MAX_FILE_SIZE) {
-    throw new ImageValidationError('The image is larger than 10 MB. Please upload a smaller photo.')
+    throw new ImageValidationError('The file is larger than 10 MB. Please upload a smaller photo or scan.')
   }
 }
 
@@ -56,19 +59,14 @@ export function drawScaled(image: HTMLImageElement, width: number, filter = 'non
  * Prepares a canvas for Tesseract: a consistent width and high-contrast grayscale
  * (colour backgrounds and the card's security pattern hurt recognition).
  */
-export const prepareForTesseract = (image: HTMLImageElement) =>
-  drawScaled(image, OCR_WIDTH, 'grayscale(1) contrast(1.4)')
+export const prepareForTesseract = (image: HTMLImageElement) => drawScaled(image, OCR_WIDTH, 'grayscale(1) contrast(1.4)')
 
 /**
- * Runs Tesseract with the Arabic model entirely in the browser (fallback engine).
+ * Runs Tesseract with the Arabic model entirely in the browser (last-resort engine).
  * The worker, WASM core and Arabic language data (a few MB) download from jsDelivr on first use
- * and are cached by the browser afterwards. A worker is created per scan and terminated
- * afterwards: scans are rare, so keeping a worker alive isn't worth the memory.
+ * and are cached by the browser afterwards. A worker is created per scan and terminated afterwards.
  */
-export async function recognizeArabicText(
-  image: HTMLCanvasElement,
-  onProgress: (progress: number) => void,
-): Promise<string> {
+export async function recognizeArabicText(image: HTMLCanvasElement, onProgress: (progress: number) => void): Promise<string> {
   const worker = await createWorker('ara', undefined, {
     logger: ({ status, progress }) => {
       if (status === 'recognizing text') onProgress(progress)

@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-// IBM Plex Sans + its Arabic companion: one designed family for the Latin UI and the Arabic
-// names shown in the ID reader and traders map. Self-hosted, only the subsets in use.
-import '@fontsource-variable/ibm-plex-sans/wght.css'
+// Archivo: an industrial grotesk whose width axis gives condensed sheet titles and normal body text
+// from one file. Arabic data is set in IBM Plex Sans Arabic. Self-hosted, only the subsets in use.
+import '@fontsource-variable/archivo/wdth.css'
 import '@fontsource/ibm-plex-sans-arabic/arabic-400.css'
 import '@fontsource/ibm-plex-sans-arabic/arabic-500.css'
 import '@fontsource/ibm-plex-sans-arabic/arabic-600.css'

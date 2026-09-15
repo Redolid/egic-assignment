@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-15T20:00:00Z",
+  "title": "Design System: EGIC Operations Toolkit",
+  "extensions": {
+    "colorMeta": {
+      "catalogue-cobalt": { "role": "primary", "displayName": "Catalogue Cobalt", "canonical": "#0047ab", "tonalRamp": ["#002f70", "#003b8e", "#0047ab", "#1d5bc6", "#7fa3e0", "#b3c9ee", "#dae5f7", "#eef3fc"] },
+      "ink-950": { "role": "neutral", "displayName": "Printer's Ink", "canonical": "#0e0e0d", "tonalRamp": ["#0e0e0d", "#2a2a27", "#3f3f3b", "#55554f", "#6d6d69", "#9b9b97", "#dcdcd9", "#f6f6f5"] },
+      "sheet-white": { "role": "neutral", "displayName": "Sheet White", "canonical": "#ffffff" },
+      "pass-green": { "role": "tertiary", "displayName": "Pass Green", "canonical": "#17753a" },
+      "fail-red": { "role": "tertiary", "displayName": "Fail Red", "canonical": "#c0141c" },
+      "caution-amber": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "#a15c00" }
+    },
+    "typographyMeta": {
+      "sheet-title": { "displayName": "Sheet title", "purpose": "One per page; condensed uppercase catalogue heading." },
+      "section-title": { "displayName": "Section title", "purpose": "Section headings sitting on a 2px ink rule." },
+      "spec-label": { "displayName": "Spec label", "purpose": "Column heads, cell labels, form labels." },
+      "figures": { "displayName": "Figures", "purpose": "Every number compared down a column." },
+      "arabic-data": { "displayName": "Arabic data", "purpose": "Names, addresses, trader names, professions." }
+    },
+    "shadows": [
+      { "name": "lifted-slip", "value": "0 16px 28px -14px rgb(14 14 13 / 0.45)", "purpose": "Drag ghost while carried." },
+      { "name": "toast", "value": "0 14px 30px -12px rgb(14 14 13 / 0.6)", "purpose": "Confirmation toast." },
+      { "name": "popup", "value": "0 14px 28px -16px rgb(14 14 13 / 0.45)", "purpose": "Map popups." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Arrivals: unfolds, sheet entry, counters, pin selection." },
+      { "name": "ease-in", "value": "cubic-bezier(0.55, 0, 1, 0.45)", "purpose": "Exits: collapses, sheet leave, row removal." },
+      { "name": "sheet-transition", "value": "160ms leave / 320ms enter, 24–36px travel in tab direction", "purpose": "View transitions between tools." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action a section exists for.",
+      "html": "<button class=\"ds-btn-primary\">Add line</button>",
+      "css": ".ds-btn-primary{height:40px;padding:0 16px;border:0;border-radius:3px;background:#0047ab;color:#fff;font:600 14px/1 'Archivo Variable',sans-serif;transition:background-color .15s,scale .15s}.ds-btn-primary:hover{background:#003b8e}.ds-btn-primary:active{scale:.98}.ds-btn-primary:focus-visible{outline:2px solid #0047ab;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined ink control that fills solid on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Reset demo data</button>",
+      "css": ".ds-btn-secondary{height:32px;padding:0 12px;border:0;border-radius:3px;background:#fff;color:#1a1a18;box-shadow:inset 0 0 0 1px #0e0e0d;font:600 13px/1 'Archivo Variable',sans-serif;transition:background-color .15s,color .15s}.ds-btn-secondary:hover{background:#0e0e0d;color:#fff}.ds-btn-secondary:focus-visible{outline:2px solid #0047ab;outline-offset:2px}"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Spec label over a near-square input.",
+      "html": "<label class=\"ds-field\"><span>Unit price, EGP</span><input value=\"1250.00\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font-family:'Archivo Variable',sans-serif}.ds-field span{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#55554f}.ds-field input{height:40px;padding:0 12px;border:1px solid #c4c4c0;border-radius:3px;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;color:#0e0e0d;outline:none;transition:border-color .2s,box-shadow .2s}.ds-field input:hover{border-color:#6d6d69}.ds-field input:focus{border-color:#0047ab;box-shadow:0 0 0 3px rgb(0 71 171/.15)}"
+    },
+    {
+      "name": "Register Tabs",
+      "kind": "nav",
+      "refersTo": "register-tab-active",
+      "description": "Catalogue thumb-index navigation with numbered balloons.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"is-active\"><i>1</i>Cars &amp; Products</a><a><i>2</i>National ID Reader</a><a><i>3</i>Traders Map</a></nav>",
+      "css": ".ds-tabs{display:flex;border-bottom:2px solid #0e0e0d;font:600 14px/1 'Archivo Variable',sans-serif}.ds-tabs a{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;color:#3f3f3b;margin-bottom:-2px;cursor:pointer}.ds-tabs a:hover{background:#f6f6f5;color:#0e0e0d}.ds-tabs a.is-active{background:#0e0e0d;color:#fff}.ds-tabs i{display:grid;place-items:center;width:20px;height:20px;border:1px solid currentColor;border-radius:50%;font-style:normal;font-size:10px}.ds-tabs a.is-active i{background:#fff;color:#0e0e0d}"
+    },
+    {
+      "name": "Numbered Balloon",
+      "kind": "custom",
+      "refersTo": "balloon",
+      "description": "Cross-reference marker; fills cobalt when either end is hovered.",
+      "html": "<span class=\"ds-balloon\">3</span><span class=\"ds-balloon is-on\">4</span>",
+      "css": ".ds-balloon{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:8px;border:1.5px solid #0e0e0d;border-radius:50%;background:#fff;color:#0e0e0d;font:700 11px/1 'Archivo Variable',sans-serif;font-variant-numeric:tabular-nums;transition:background-color .2s,color .2s}.ds-balloon:hover,.ds-balloon.is-on{background:#0047ab;border-color:#0047ab;color:#fff}"
+    },
+    {
+      "name": "Inspection Stamp",
+      "kind": "chip",
+      "description": "Verdict for a cross-check.",
+      "html": "<span class=\"ds-stamp ds-pass\">Pass</span> <span class=\"ds-stamp ds-fail\">Fail</span>",
+      "css": ".ds-stamp{display:inline-flex;align-items:center;height:24px;padding:0 10px;border:1.5px solid;font:700 11px/1 'Archivo Variable',sans-serif;letter-spacing:.08em;text-transform:uppercase}.ds-pass{border-color:#17753a;color:#115c2d}.ds-fail{border-color:#c0141c;color:#9a0f16}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Product Data Sheet",
+    "overview": "Every screen is a sheet from a German industrial catalogue: a title block, register tabs, hairline-ruled specification tables, and numbered balloons that cross-reference one thing to another. The design's job is to make derivation visible. Density is welcome; decoration is not.",
+    "keyCharacteristics": [
+      "White sheet ground, ink-black section rules, hairline row rules.",
+      "Condensed uppercase Archivo for sheet and section titles; tabular figures for every number.",
+      "Numbered balloons as the cross-reference device.",
+      "Catalogue cobalt reserved for actions, selection and focus.",
+      "Arabic data typeset in IBM Plex Sans Arabic beside the English UI."
+    ],
+    "rules": [
+      { "name": "The Cobalt Means Act Rule", "body": "Cobalt appears only on something clickable, selected, focused or receiving a drop.", "section": "colors" },
+      { "name": "The Stamp Rule", "body": "Green, red and amber are verdicts, never decoration, and always come with words.", "section": "colors" },
+      { "name": "The Tabular Figures Rule", "body": "Any number a person might compare down a column uses tabular lining figures.", "section": "typography" },
+      { "name": "The Condensed Is For Titles Rule", "body": "Condensed capitals name sheets and sections only.", "section": "typography" },
+      { "name": "The Flat Sheet Rule", "body": "Nothing resting on the sheet casts a shadow; only moved or floating objects do.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do open every sheet with the title block: condensed sheet title, brief, spec cells.",
+      "Do separate sections with a 2px Printer's Ink rule and rows with 1px Hairlines.",
+      "Do use a numbered balloon whenever a value on one surface refers to a value on another, and make hover highlight both ends.",
+      "Do set every number in tabular figures and right-align numeric columns.",
+      "Do typeset Arabic names, addresses and professions right-to-left in IBM Plex Sans Arabic.",
+      "Do keep motion to state changes: sheets slide in the direction of their tab, sections unfold by height, totals count to their new value, stamps press in; every one has a reduced-motion fallback."
+    ],
+    "donts": [
+      "Don't put content in rounded, shadowed cards; use ruled sections on the sheet.",
+      "Don't use cobalt on anything that isn't actionable, selected or focused.",
+      "Don't number sections or items that nothing cross-references.",
+      "Don't add colour fields, gradients or tinted backgrounds for emphasis; use rule weight, condensed titles and figures.",
+      "Don't use Unicode glyphs or emoji as icons; icons are 2px-stroke SVGs."
+    ]
+  }
+}

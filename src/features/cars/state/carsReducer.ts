@@ -1,3 +1,4 @@
+import { addOrMerge } from '../lib/merge'
 import type { Car, Product } from '../types'
 
 export type CarsAction =
@@ -25,9 +26,10 @@ function updateCar(cars: Car[], carId: string, update: (car: Car) => Car): Car[]
 export function carsReducer(state: Car[], action: CarsAction): Car[] {
   switch (action.type) {
     case 'ADD_PRODUCT':
+      // The same product (name + price) already on this car gets its quantity increased instead of a new row.
       return updateCar(state, action.carId, (car) => ({
         ...car,
-        products: [...car.products, action.product],
+        products: addOrMerge(car.products, action.product),
       }))
 
     case 'UPDATE_PRODUCT':
@@ -55,7 +57,7 @@ export function carsReducer(state: Car[], action: CarsAction): Car[] {
           return { ...car, products: car.products.filter((p) => p.id !== action.productId) }
         }
         if (car.id === action.toCarId) {
-          return { ...car, products: [...car.products, product] }
+          return { ...car, products: addOrMerge(car.products, product) }
         }
         return car
       })

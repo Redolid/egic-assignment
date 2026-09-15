@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { SheetHeader } from '../components/layout/SheetHeader'
 import { TraderList } from '../features/traders-map/components/TraderList'
 import { TradersMap } from '../features/traders-map/components/TradersMap'
 import rawTraders from '../features/traders-map/data/traders.json'
@@ -10,9 +11,10 @@ const traders = normalizeTraders(rawTraders)
 
 export function TradersMapPage() {
   const [selection, setSelection] = useState<Selection>(null)
-  // Hover is a preview of the link between a row and its pin, before anything is committed.
+  // Hover is a preview of the link between a row and its balloon, before anything is committed.
   const [hoveredId, setHoveredId] = useState<number | null>(null)
   const mapSectionRef = useRef<HTMLElement>(null)
+  const selected = traders.find((trader) => trader.id === selection?.id)
 
   const selectFromList = (id: number) => {
     setSelection({ id, source: 'list' })
@@ -23,29 +25,45 @@ export function TradersMapPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">EGIC Traders Map</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          {traders.length} customer service locations. Select a trader in the list or click a marker.
-        </p>
-      </header>
+    <div>
+      <SheetHeader
+        title="Traders Map"
+        description="EGIC customer-service traders. Numbers match between the register and the map: pick a row to fly to its location, or a balloon to find its row."
+        cells={[
+          { label: 'Locations', value: traders.length },
+          {
+            label: 'Selected',
+            value: selected ? (
+              <span dir="rtl" lang="ar" className="block max-w-[12rem] truncate">
+                {selected.name}
+              </span>
+            ) : (
+              <span className="text-ink-400">—</span>
+            ),
+          },
+        ]}
+      />
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:h-[calc(100dvh-13rem)] lg:min-h-[32rem] lg:grid-cols-[22rem_minmax(0,1fr)]">
-        <section
-          aria-label="Traders list"
-          className="order-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs lg:order-1"
-        >
-          <TraderList
-            traders={traders}
-            selectedId={selection?.id ?? null}
-            hoveredId={hoveredId}
-            onSelect={selectFromList}
-            onHover={setHoveredId}
-          />
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 lg:h-[calc(100dvh-19rem)] lg:min-h-[34rem] lg:grid-cols-[23rem_minmax(0,1fr)]">
+        <section aria-labelledby="register-heading" className="order-2 flex min-h-0 flex-col lg:order-1">
+          <div className="flex items-baseline justify-between border-b-2 border-ink-950 pb-2">
+            <h2 id="register-heading" className="sheet-title text-xl text-ink-950">
+              Trader register
+            </h2>
+            <span className="spec-label">No. · Name · Lat, Lng</span>
+          </div>
+          <div className="min-h-0 flex-1">
+            <TraderList
+              traders={traders}
+              selectedId={selection?.id ?? null}
+              hoveredId={hoveredId}
+              onSelect={selectFromList}
+              onHover={setHoveredId}
+            />
+          </div>
         </section>
 
-        <section ref={mapSectionRef} aria-label="Map" className="order-1 h-[55vh] min-h-80 scroll-mt-32 lg:order-2 lg:h-full">
+        <section ref={mapSectionRef} aria-label="Map" className="order-1 h-[58vh] min-h-80 scroll-mt-40 lg:order-2 lg:h-full">
           <TradersMap
             traders={traders}
             selection={selection}

@@ -1,46 +1,62 @@
 @import 'tailwindcss';
 
-@theme {
-  --font-sans: 'IBM Plex Sans Variable', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+/* ===========================================================================
+   EGIC Operations Toolkit — "DIN product data sheet"
+   A white sheet ruled in ink: 2px section rules, 1px hairlines, condensed caps
+   for sheet titles, tabular figures, and catalogue cobalt only for actions and
+   selection. Numbered balloons cross-reference values, as on a technical drawing.
+   =========================================================================== */
 
-  --color-brand-50: #eef6ff;
-  --color-brand-100: #d9eaff;
-  --color-brand-200: #b8d7ff;
-  --color-brand-500: #2f7cf6;
-  --color-brand-600: #1f63d8;
-  --color-brand-700: #1b4fae;
-  /* Selection on the map: warm, so it separates from the blue UI and the map's water. */
-  --color-signal-500: #f26b1d;
-  --color-signal-600: #d4550c;
+@theme {
+  --font-sans: 'Archivo Variable', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Archivo Variable', ui-sans-serif, sans-serif;
+
+  /* Ink: neutral greys of printed catalogue ink. 600+ pass AA on white. */
+  --color-ink-50: #f6f6f5;
+  --color-ink-100: #ededeb;
+  --color-ink-200: #dcdcd9;
+  --color-ink-300: #c4c4c0;
+  --color-ink-400: #9b9b97;
+  --color-ink-500: #6d6d69;
+  --color-ink-600: #55554f;
+  --color-ink-700: #3f3f3b;
+  --color-ink-800: #2a2a27;
+  --color-ink-900: #1a1a18;
+  --color-ink-950: #0e0e0d;
+
+  /* Catalogue cobalt: actions, links, selection, focus. Never decoration. */
+  --color-cobalt-50: #eef3fc;
+  --color-cobalt-100: #dae5f7;
+  --color-cobalt-200: #b3c9ee;
+  --color-cobalt-300: #7fa3e0;
+  --color-cobalt-500: #1d5bc6;
+  --color-cobalt-600: #0047ab;
+  --color-cobalt-700: #003b8e;
+  --color-cobalt-800: #002f70;
+
+  /* Inspection stamps: pass / fail / caution. */
+  --color-pass-50: #eaf5ee;
+  --color-pass-600: #17753a;
+  --color-pass-700: #115c2d;
+  --color-fail-50: #fdeeee;
+  --color-fail-600: #c0141c;
+  --color-fail-700: #9a0f16;
+  --color-caution-50: #fdf4e4;
+  --color-caution-600: #a15c00;
+  --color-caution-700: #7d4700;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --animate-shake: shake 320ms var(--ease-in-out);
   --animate-scan: scan 1.8s var(--ease-in-out) infinite alternate;
   --animate-indeterminate: indeterminate 1.3s var(--ease-in-out) infinite;
   --animate-row-arrive: row-arrive 1.6s var(--ease-out);
   --animate-reveal-down: reveal-down 260ms var(--ease-out);
   --animate-lift: lift 180ms var(--ease-out) both;
+  --animate-draw-in: draw-in 420ms var(--ease-out) both;
 }
 
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  20%,
-  60% {
-    transform: translateX(-5px);
-  }
-  40%,
-  80% {
-    transform: translateX(5px);
-  }
-}
-
-/* Task 2: a light band sweeping over the card while it is being read. */
 @keyframes scan {
   from {
     transform: translateY(-55%);
@@ -59,29 +75,59 @@
   }
 }
 
-/* Task 1: a freshly added or moved product row washes in the brand tint, then settles. */
 @keyframes row-arrive {
   from {
-    background-color: var(--color-brand-100);
+    background-color: var(--color-cobalt-100);
   }
   to {
     background-color: transparent;
   }
 }
 
-/* Alerts unroll from their top edge instead of popping in. */
 @keyframes reveal-down {
   from {
-    clip-path: inset(0 0 100% 0 round 0.5rem);
+    clip-path: inset(0 0 100% 0);
     transform: translateY(-4px);
   }
   to {
-    clip-path: inset(0 0 0 0 round 0.5rem);
+    clip-path: inset(0 0 0 0);
     transform: translateY(0);
   }
 }
 
-/* Task 2: segments of a valid ID start joined as one number, then separate into their parts. */
+@keyframes lift {
+  from {
+    transform: rotate(0deg) scale(1);
+    box-shadow: 0 1px 0 var(--color-ink-900);
+  }
+  to {
+    transform: rotate(-1.5deg) scale(1.02);
+    box-shadow: 0 16px 28px -14px rgb(14 14 13 / 0.45);
+  }
+}
+
+/* A rule or leader line drawn out from its origin, like a pen stroke. */
+@keyframes draw-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* An inspection stamp pressed onto the sheet when a check's verdict changes. */
+@keyframes stamp {
+  from {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.96);
+    opacity: 1;
+  }
+}
+
 @keyframes segment-split {
   from {
     transform: translateX(calc(var(--i) * -0.5rem));
@@ -95,23 +141,11 @@
   }
 }
 
-/* Drag ghost: picked up — slightly tilted and raised. */
-@keyframes lift {
-  from {
-    transform: rotate(0deg) scale(1);
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
-  }
-  to {
-    transform: rotate(-2deg) scale(1.03);
-    box-shadow: 0 18px 32px -12px rgb(15 23 42 / 0.35);
-  }
-}
-
 @layer base {
   html {
     color-scheme: light;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: var(--color-slate-300) transparent;
+    scrollbar-color: var(--color-ink-300) transparent;
   }
 
   html,
@@ -121,23 +155,28 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-800 antialiased;
-    font-optical-sizing: auto;
+    @apply bg-white text-ink-900 antialiased;
   }
 
   h1,
-  h2 {
+  h2,
+  h3 {
     text-wrap: balance;
   }
 
+  [lang='ar'],
+  [dir='rtl'] {
+    font-family: var(--font-arabic);
+  }
+
   ::selection {
-    background-color: var(--color-brand-100);
-    color: var(--color-brand-700);
+    background-color: var(--color-cobalt-100);
+    color: var(--color-cobalt-800);
   }
 
   input,
   textarea {
-    caret-color: var(--color-brand-600);
+    caret-color: var(--color-cobalt-600);
   }
 
   * {
@@ -145,10 +184,56 @@
   }
 }
 
+@layer components {
+  /* Condensed caps for sheet and section titles. */
+  .sheet-title {
+    font-stretch: 72%;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  /* Small tracked caps for column heads and cell labels. */
+  .spec-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-600);
+  }
+
+  .figures {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Numbered balloon, as used on technical drawings to reference a parts list. */
+  .balloon {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    border: 1.5px solid currentColor;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    background: #fff;
+  }
+
+  /* Dimension bracket on the subtotal column while its total is inspected. */
+  table[data-summing='true'] td[data-col='subtotal'] {
+    box-shadow: inset -2px 0 0 var(--color-cobalt-600);
+    color: var(--color-cobalt-700);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Page transitions (View Transitions API, driven by components/layout/AppLayout)
-   The three tools are laid out left → right like the nav, so the page travels in
-   the direction of the tab you picked, while the active tab highlight glides over.
+   The sheets are ordered like the register tabs, so a sheet slides in from the
+   side of the tab you picked while the black active tab moves across.
    --------------------------------------------------------------------------- */
 :root {
   --nav-direction: 1;
@@ -168,86 +253,90 @@
 }
 
 ::view-transition-old(page) {
-  animation: page-leave 180ms var(--ease-in) both;
+  animation: page-leave 160ms var(--ease-in) both;
 }
 
 ::view-transition-new(page) {
-  animation: page-enter 340ms var(--ease-out) both;
+  animation: page-enter 320ms var(--ease-out) both;
 }
 
-::view-transition-group(nav-pill) {
-  animation-duration: 340ms;
+::view-transition-group(nav-tab) {
+  animation-duration: 320ms;
   animation-timing-function: var(--ease-out);
 }
 
 @keyframes page-leave {
   to {
     opacity: 0;
-    transform: translateX(calc(var(--nav-direction) * -28px));
-    filter: blur(3px);
+    transform: translateX(calc(var(--nav-direction) * -24px));
   }
 }
 
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateX(calc(var(--nav-direction) * 40px));
-    filter: blur(3px);
+    transform: translateX(calc(var(--nav-direction) * 36px));
   }
 }
 
 /* ---------------------------------------------------------------------------
-   Task 3 — Leaflet surfaces restyled from the palette
+   Traders map — Leaflet surfaces in the sheet's vocabulary
    --------------------------------------------------------------------------- */
 .leaflet-container {
   font-family: var(--font-sans);
-  background: var(--color-slate-100);
+  background: var(--color-ink-100);
 }
 
 .leaflet-bar {
-  border: 0 !important;
-  border-radius: 0.625rem !important;
-  overflow: hidden;
-  box-shadow: 0 4px 12px -4px rgb(15 23 42 / 0.25), 0 0 0 1px var(--color-slate-200) !important;
+  border: 1.5px solid var(--color-ink-900) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .leaflet-bar a {
-  color: var(--color-slate-700) !important;
-  border-bottom-color: var(--color-slate-200) !important;
+  border-radius: 0 !important;
+  color: var(--color-ink-900) !important;
+  border-bottom-color: var(--color-ink-900) !important;
   transition: background-color 150ms, color 150ms;
 }
 
 .leaflet-bar a:hover {
-  background: var(--color-slate-50) !important;
-  color: var(--color-brand-600) !important;
+  background: var(--color-ink-900) !important;
+  color: #fff !important;
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 0.875rem;
-  box-shadow: 0 14px 30px -12px rgb(15 23 42 / 0.35), 0 0 0 1px rgb(15 23 42 / 0.06);
+  border-radius: 0;
+  border: 1.5px solid var(--color-ink-900);
+  box-shadow: 0 14px 28px -16px rgb(14 14 13 / 0.45);
   transform-origin: 50% calc(100% + 12px);
-  animation: popup-open 260ms var(--ease-out);
+  animation: popup-open 240ms var(--ease-out);
 }
 
 .leaflet-popup-tip {
+  border: 1.5px solid var(--color-ink-900);
   box-shadow: none;
 }
 
 .leaflet-popup-tip-container {
-  animation: popup-tip 260ms var(--ease-out);
+  animation: popup-tip 240ms var(--ease-out);
 }
 
 .leaflet-popup-content {
-  margin: 0.875rem 1rem;
+  margin: 0.75rem 0.875rem;
 }
 
 .leaflet-popup-content a {
-  color: var(--color-brand-600);
+  color: var(--color-cobalt-600);
+}
+
+.leaflet-control-attribution {
+  font-size: 10px;
 }
 
 @keyframes popup-open {
   from {
-    transform: translateY(8px) scale(0.9);
+    transform: translateY(8px) scale(0.92);
     opacity: 0;
   }
 }
@@ -259,8 +348,8 @@
   }
 }
 
-/* Trader pin (L.divIcon). Leaflet positions the outer element with transforms, so all
-   motion lives on the inner body, scaled from the pin's tip. */
+/* Trader marker = a numbered balloon on a leader line, pointing at the exact location.
+   Leaflet positions the outer element with transforms; motion lives on the inner body. */
 .trader-pin {
   background: none;
   border: 0;
@@ -271,43 +360,82 @@
   display: block;
   width: 100%;
   height: 100%;
-  color: var(--color-brand-600);
+  color: var(--color-ink-900);
   transform-origin: 50% 100%;
-  filter: drop-shadow(0 3px 3px rgb(15 23 42 / 0.3));
   transition:
     transform 220ms var(--ease-out),
-    color 220ms var(--ease-out),
-    filter 220ms var(--ease-out);
+    color 200ms var(--ease-out);
 }
 
-.trader-pin__body svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+.trader-pin__balloon {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  background: #fff;
+  font:
+    700 11px/1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 6px -1px rgb(14 14 13 / 0.35);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.trader-pin__leader {
+  position: absolute;
+  left: 50%;
+  top: 25px;
+  bottom: 3px;
+  width: 2px;
+  margin-left: -1px;
+  background: currentColor;
+}
+
+.trader-pin__dot {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 9999px;
+  background: currentColor;
+  box-shadow: 0 0 0 2px #fff;
 }
 
 .trader-pin.is-hovered .trader-pin__body {
-  transform: translateY(-3px) scale(1.14);
-  color: var(--color-brand-700);
-  filter: drop-shadow(0 8px 6px rgb(15 23 42 / 0.28));
+  transform: translateY(-3px);
+  color: var(--color-cobalt-600);
 }
 
 .trader-pin.is-selected .trader-pin__body {
-  transform: translateY(-2px) scale(1.32);
-  color: var(--color-signal-500);
-  filter: drop-shadow(0 10px 8px rgb(15 23 42 / 0.3));
+  transform: translateY(-4px) scale(1.18);
+  color: var(--color-cobalt-600);
 }
 
-/* A ring on the ground under the selected pin, pinging twice to say "here". */
+.trader-pin.is-selected .trader-pin__balloon {
+  background: var(--color-cobalt-600);
+  color: #fff;
+  border-color: var(--color-cobalt-600);
+}
+
+/* A ring on the ground under the selected marker, pinging twice to say "here". */
 .trader-pin__ping {
   position: absolute;
   left: 50%;
-  bottom: -3px;
-  width: 22px;
+  bottom: -2px;
+  width: 20px;
   height: 8px;
-  margin-left: -11px;
+  margin-left: -10px;
   border-radius: 50%;
-  border: 2px solid var(--color-signal-500);
+  border: 2px solid var(--color-cobalt-600);
   opacity: 0;
   pointer-events: none;
 }
@@ -322,7 +450,7 @@
     opacity: 0.9;
   }
   to {
-    transform: scale(2.4);
+    transform: scale(2.6);
     opacity: 0;
   }
 }
@@ -340,12 +468,12 @@
     animation-direction: reverse;
   }
 
-  ::view-transition-group(nav-pill) {
+  ::view-transition-group(nav-tab) {
     animation-duration: 0s;
   }
 
   .trader-pin__body {
-    transition-property: color, filter;
+    transition-property: color;
   }
 
   .trader-pin.is-hovered .trader-pin__body,

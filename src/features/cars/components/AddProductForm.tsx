@@ -5,11 +5,12 @@ import { CheckIcon, PlusIcon } from '../../../components/ui/Icons'
 import { TextField } from '../../../components/ui/TextField'
 import { shake } from '../../../lib/motion'
 import { validateName, validatePrice, validateQuantity } from '../lib/validation'
+import type { ChangeOutcome } from '../state/CarsContext'
 import type { ProductInput } from '../types'
 
 interface AddProductFormProps {
   carName: string
-  onAdd: (input: ProductInput) => void
+  onAdd: (input: ProductInput) => ChangeOutcome
 }
 
 const emptyForm = { name: '', quantity: '1', unitPrice: '' }
@@ -26,9 +27,7 @@ function validateForm(values: FormValues) {
     unitPrice: unitPrice.ok ? null : unitPrice.error,
   }
   const input: ProductInput | null =
-    name.ok && quantity.ok && unitPrice.ok
-      ? { name: name.value, quantity: quantity.value, unitPrice: unitPrice.value }
-      : null
+    name.ok && quantity.ok && unitPrice.ok ? { name: name.value, quantity: quantity.value, unitPrice: unitPrice.value } : null
 
   return { errors, input }
 }
@@ -38,7 +37,7 @@ export function AddProductForm({ carName, onAdd }: AddProductFormProps) {
   // Errors only appear after the first submit attempt, then update as the user types.
   const [submitted, setSubmitted] = useState(false)
   const [rejections, setRejections] = useState(0)
-  const [justAdded, setJustAdded] = useState(false)
+  const [receipt, setReceipt] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const nameRef = useRef<HTMLInputElement>(null)
 
@@ -54,13 +53,12 @@ export function AddProductForm({ carName, onAdd }: AddProductFormProps) {
   }, [rejections])
 
   useEffect(() => {
-    if (!justAdded) return
-    const timer = window.setTimeout(() => setJustAdded(false), 1400)
+    if (!receipt) return
+    const timer = window.setTimeout(() => setReceipt(null), 3200)
     return () => window.clearTimeout(timer)
-  }, [justAdded])
+  }, [receipt])
 
-  const setField = (field: keyof FormValues) => (value: string) =>
-    setValues((current) => ({ ...current, [field]: value }))
+  const setField = (field: keyof FormValues) => (value: string) => setValues((current) => ({ ...current, [field]: value }))
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -70,68 +68,73 @@ export function AddProductForm({ carName, onAdd }: AddProductFormProps) {
       return
     }
 
-    onAdd(input)
+    const outcome = onAdd(input)
+    setReceipt(
+      outcome.merged
+        ? `${input.name} is already on this vehicle at this price — quantity is now ${outcome.quantity}.`
+        : `${input.name} added as a new line.`,
+    )
     setValues(emptyForm)
     setSubmitted(false)
-    setJustAdded(true)
     nameRef.current?.focus()
   }
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      noValidate
-      aria-label={`Add a product to ${carName}`}
-      className="grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100 sm:grid-cols-[minmax(0,1fr)_7rem_9rem_auto] sm:items-start"
-    >
-      <TextField
-        ref={nameRef}
-        label="Product name"
-        placeholder="e.g. Oil Filter"
-        value={values.name}
-        error={visibleErrors.name}
-        onChange={(event) => setField('name')(event.target.value)}
-        className="col-span-2 sm:col-span-1"
-      />
-      <TextField
-        label="Quantity"
-        inputMode="numeric"
-        value={values.quantity}
-        error={visibleErrors.quantity}
-        onChange={(event) => setField('quantity')(event.target.value)}
-      />
-      <TextField
-        label="Unit price (EGP)"
-        inputMode="decimal"
-        placeholder="0.00"
-        value={values.unitPrice}
-        error={visibleErrors.unitPrice}
-        onChange={(event) => setField('unitPrice')(event.target.value)}
-      />
-      <Button
-        type="submit"
-        className={`col-span-2 justify-center overflow-hidden sm:col-span-1 sm:mt-5 ${justAdded ? 'bg-emerald-600!' : ''}`}
-      >
-        {/* The plus turns into a check for a moment: the add was accepted. */}
-        <span className="relative grid h-4 w-4 place-items-center">
-          <PlusIcon
-            width={16}
-            height={16}
-            className={`absolute transition-[rotate,scale,opacity] duration-300 ease-[var(--ease-out)] ${
-              justAdded ? 'rotate-90 scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'
-            }`}
-          />
-          <CheckIcon
-            width={16}
-            height={16}
-            className={`absolute transition-[scale,opacity] duration-300 ease-[var(--ease-out)] ${
-              justAdded ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-            }`}
-          />
-        </span>
-        <span aria-live="polite">{justAdded ? 'Added' : 'Add product'}</span>
-      </Button>
+    <form ref={formRef} onSubmit={handleSubmit} noValidate aria-label={`Add a line to ${carName}`} className="bg-ink-50 px-3 py-3 sm:px-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1fr)_6.5rem_8.5rem_auto] sm:items-start">
+        <TextField
+          ref={nameRef}
+          label="Add line · part name"
+          placeholder="e.g. Oil Filter"
+          value={values.name}
+          error={visibleErrors.name}
+          onChange={(event) => setField('name')(event.target.value)}
+          className="col-span-2 sm:col-span-1"
+        />
+        <TextField
+          label="Qty"
+          inputMode="numeric"
+          value={values.quantity}
+          error={visibleErrors.quantity}
+          onChange={(event) => setField('quantity')(event.target.value)}
+          className="[&_input]:tabular-nums [&_input]:text-right"
+        />
+        <TextField
+          label="Unit price, EGP"
+          inputMode="decimal"
+          placeholder="0.00"
+          value={values.unitPrice}
+          error={visibleErrors.unitPrice}
+          onChange={(event) => setField('unitPrice')(event.target.value)}
+          className="[&_input]:tabular-nums [&_input]:text-right"
+        />
+        <Button
+          type="submit"
+          className={`col-span-2 justify-center sm:col-span-1 sm:mt-[1.4rem] ${receipt ? 'bg-pass-600! hover:bg-pass-700!' : ''}`}
+        >
+          {/* The plus turns into a check for a moment: the line was accepted. */}
+          <span className="relative grid h-4 w-4 place-items-center">
+            <PlusIcon
+              width={16}
+              height={16}
+              className={`absolute transition-[rotate,scale,opacity] duration-300 ease-[var(--ease-out)] ${
+                receipt ? 'rotate-90 scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'
+              }`}
+            />
+            <CheckIcon
+              width={16}
+              height={16}
+              className={`absolute transition-[scale,opacity] duration-300 ease-[var(--ease-out)] ${
+                receipt ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+              }`}
+            />
+          </span>
+          {receipt ? 'Added' : 'Add line'}
+        </Button>
+      </div>
+      <p aria-live="polite" className="min-h-0 text-xs text-ink-700 empty:hidden">
+        {receipt && <span className="mt-2 block motion-safe:animate-reveal-down">{receipt}</span>}
+      </p>
     </form>
   )
 }

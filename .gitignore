@@ -16,6 +16,14 @@ dist-ssr
 # Personal documents — never commit
 Personal ID.pdf
 
+# Local model service (Python)
+ml-service/.venv
+__pycache__/
+.pytest_cache/
+
+# Design review captures (may show uploaded documents)
+.impeccable/review/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

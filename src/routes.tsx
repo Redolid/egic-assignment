@@ -35,9 +35,9 @@ export const TradersMapPage = lazyWithPreload(() =>
   import('./pages/TradersMapPage').then((module) => module.TradersMapPage),
 )
 
-/** Nav order doubles as the spatial order used by page transitions. */
+/** Register tabs. Their order is also the spatial order used by page transitions. */
 export const NAV_ITEMS = [
-  { to: '/cars', label: 'Cars & Products', short: 'Cars', preload: undefined },
-  { to: '/national-id', label: 'National ID Reader', short: 'National ID', preload: NationalIdPage.preload },
-  { to: '/map', label: 'Traders Map', short: 'Map', preload: TradersMapPage.preload },
+  { to: '/cars', register: 'Pricing', label: 'Cars & Products', preload: undefined },
+  { to: '/national-id', register: 'ID check', label: 'National ID Reader', preload: NationalIdPage.preload },
+  { to: '/map', register: 'Traders', label: 'Traders Map', preload: TradersMapPage.preload },
 ]
