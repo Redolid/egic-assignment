@@ -1,0 +1,367 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'IBM Plex Sans Variable', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #eef6ff;
+  --color-brand-100: #d9eaff;
+  --color-brand-200: #b8d7ff;
+  --color-brand-500: #2f7cf6;
+  --color-brand-600: #1f63d8;
+  --color-brand-700: #1b4fae;
+  /* Selection on the map: warm, so it separates from the blue UI and the map's water. */
+  --color-signal-500: #f26b1d;
+  --color-signal-600: #d4550c;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-shake: shake 320ms var(--ease-in-out);
+  --animate-scan: scan 1.8s var(--ease-in-out) infinite alternate;
+  --animate-indeterminate: indeterminate 1.3s var(--ease-in-out) infinite;
+  --animate-row-arrive: row-arrive 1.6s var(--ease-out);
+  --animate-reveal-down: reveal-down 260ms var(--ease-out);
+  --animate-lift: lift 180ms var(--ease-out) both;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Task 2: a light band sweeping over the card while it is being read. */
+@keyframes scan {
+  from {
+    transform: translateY(-55%);
+  }
+  to {
+    transform: translateY(55%);
+  }
+}
+
+@keyframes indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* Task 1: a freshly added or moved product row washes in the brand tint, then settles. */
+@keyframes row-arrive {
+  from {
+    background-color: var(--color-brand-100);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+/* Alerts unroll from their top edge instead of popping in. */
+@keyframes reveal-down {
+  from {
+    clip-path: inset(0 0 100% 0 round 0.5rem);
+    transform: translateY(-4px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0.5rem);
+    transform: translateY(0);
+  }
+}
+
+/* Task 2: segments of a valid ID start joined as one number, then separate into their parts. */
+@keyframes segment-split {
+  from {
+    transform: translateX(calc(var(--i) * -0.5rem));
+  }
+}
+
+@keyframes caption-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Drag ghost: picked up — slightly tilted and raised. */
+@keyframes lift {
+  from {
+    transform: rotate(0deg) scale(1);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+  }
+  to {
+    transform: rotate(-2deg) scale(1.03);
+    box-shadow: 0 18px 32px -12px rgb(15 23 42 / 0.35);
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-color: var(--color-slate-300) transparent;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+    font-optical-sizing: auto;
+  }
+
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-100);
+    color: var(--color-brand-700);
+  }
+
+  input,
+  textarea {
+    caret-color: var(--color-brand-600);
+  }
+
+  * {
+    scrollbar-width: thin;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Page transitions (View Transitions API, driven by components/layout/AppLayout)
+   The three tools are laid out left → right like the nav, so the page travels in
+   the direction of the tab you picked, while the active tab highlight glides over.
+   --------------------------------------------------------------------------- */
+:root {
+  --nav-direction: 1;
+}
+
+.app-header {
+  view-transition-name: app-header;
+}
+
+.app-main {
+  view-transition-name: page;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(page) {
+  animation: page-leave 180ms var(--ease-in) both;
+}
+
+::view-transition-new(page) {
+  animation: page-enter 340ms var(--ease-out) both;
+}
+
+::view-transition-group(nav-pill) {
+  animation-duration: 340ms;
+  animation-timing-function: var(--ease-out);
+}
+
+@keyframes page-leave {
+  to {
+    opacity: 0;
+    transform: translateX(calc(var(--nav-direction) * -28px));
+    filter: blur(3px);
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--nav-direction) * 40px));
+    filter: blur(3px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Task 3 — Leaflet surfaces restyled from the palette
+   --------------------------------------------------------------------------- */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--color-slate-100);
+}
+
+.leaflet-bar {
+  border: 0 !important;
+  border-radius: 0.625rem !important;
+  overflow: hidden;
+  box-shadow: 0 4px 12px -4px rgb(15 23 42 / 0.25), 0 0 0 1px var(--color-slate-200) !important;
+}
+
+.leaflet-bar a {
+  color: var(--color-slate-700) !important;
+  border-bottom-color: var(--color-slate-200) !important;
+  transition: background-color 150ms, color 150ms;
+}
+
+.leaflet-bar a:hover {
+  background: var(--color-slate-50) !important;
+  color: var(--color-brand-600) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.875rem;
+  box-shadow: 0 14px 30px -12px rgb(15 23 42 / 0.35), 0 0 0 1px rgb(15 23 42 / 0.06);
+  transform-origin: 50% calc(100% + 12px);
+  animation: popup-open 260ms var(--ease-out);
+}
+
+.leaflet-popup-tip {
+  box-shadow: none;
+}
+
+.leaflet-popup-tip-container {
+  animation: popup-tip 260ms var(--ease-out);
+}
+
+.leaflet-popup-content {
+  margin: 0.875rem 1rem;
+}
+
+.leaflet-popup-content a {
+  color: var(--color-brand-600);
+}
+
+@keyframes popup-open {
+  from {
+    transform: translateY(8px) scale(0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes popup-tip {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+/* Trader pin (L.divIcon). Leaflet positions the outer element with transforms, so all
+   motion lives on the inner body, scaled from the pin's tip. */
+.trader-pin {
+  background: none;
+  border: 0;
+}
+
+.trader-pin__body {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--color-brand-600);
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 3px 3px rgb(15 23 42 / 0.3));
+  transition:
+    transform 220ms var(--ease-out),
+    color 220ms var(--ease-out),
+    filter 220ms var(--ease-out);
+}
+
+.trader-pin__body svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.trader-pin.is-hovered .trader-pin__body {
+  transform: translateY(-3px) scale(1.14);
+  color: var(--color-brand-700);
+  filter: drop-shadow(0 8px 6px rgb(15 23 42 / 0.28));
+}
+
+.trader-pin.is-selected .trader-pin__body {
+  transform: translateY(-2px) scale(1.32);
+  color: var(--color-signal-500);
+  filter: drop-shadow(0 10px 8px rgb(15 23 42 / 0.3));
+}
+
+/* A ring on the ground under the selected pin, pinging twice to say "here". */
+.trader-pin__ping {
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 22px;
+  height: 8px;
+  margin-left: -11px;
+  border-radius: 50%;
+  border: 2px solid var(--color-signal-500);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.trader-pin.is-selected .trader-pin__ping {
+  animation: pin-ping 1s var(--ease-out) 2;
+}
+
+@keyframes pin-ping {
+  from {
+    transform: scale(0.4);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion: keep state changes legible (colour, opacity), drop travel.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(page),
+  ::view-transition-new(page) {
+    animation: page-crossfade 160ms linear both;
+  }
+
+  ::view-transition-old(page) {
+    animation-direction: reverse;
+  }
+
+  ::view-transition-group(nav-pill) {
+    animation-duration: 0s;
+  }
+
+  .trader-pin__body {
+    transition-property: color, filter;
+  }
+
+  .trader-pin.is-hovered .trader-pin__body,
+  .trader-pin.is-selected .trader-pin__body {
+    transform: none;
+  }
+
+  .trader-pin.is-selected .trader-pin__ping,
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip-container {
+    animation: none;
+  }
+}
+
+@keyframes page-crossfade {
+  from {
+    opacity: 0;
+  }
+}
