@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import { IdIllustration } from '../components/graphics/Illustrations'
+import { SectionTitle } from '../components/layout/SectionTitle'
 import { SheetHeader } from '../components/layout/SheetHeader'
 import { Button } from '../components/ui/Button'
+import { IdCardIcon, PackageIcon } from '../components/ui/Icons'
 import { ChecksTable } from '../features/national-id/components/ChecksTable'
 import { DocumentView } from '../features/national-id/components/DocumentView'
 import { EngineSelector } from '../features/national-id/components/EngineSelector'
@@ -22,18 +24,26 @@ type ScanState =
   | { status: 'done'; result: CardReadResult }
   | { status: 'error'; message: string }
 
-function SectionTitle({ id, children, aside }: { id: string; children: ReactNode; aside?: ReactNode }) {
+/**
+ * The pipe between the document and the data: empty before a read, water flowing while the engine
+ * works, full once the fields have arrived. Horizontal between the columns, vertical when stacked.
+ */
+function FlowConnector({ state }: { state: 'idle' | 'flowing' | 'full' }) {
+  const water = state === 'idle' ? 'scale-0' : 'scale-100'
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-2 border-b-2 border-ink-950 pb-2">
-      <h2 id={id} className="sheet-title text-xl text-ink-950">
-        {children}
-      </h2>
-      {aside}
+    <div aria-hidden="true" className="flex items-center justify-center xl:items-start xl:pt-28">
+      <div className="pipe relative h-10 w-3 overflow-hidden xl:h-3 xl:w-full">
+        <span
+          className={`pipe-water absolute inset-0 origin-top transition-transform duration-700 ease-[var(--ease-out)] xl:origin-left ${water} ${
+            state === 'flowing' ? 'motion-safe:animate-flow' : ''
+          }`}
+        />
+      </div>
     </div>
   )
 }
 
-const ENGINE_PREFERENCE: ReaderEngine[] = ['local-model', 'claude', 'tesseract']
+const ENGINE_PREFERENCE: ReaderEngine[] = ['local-model', 'tesseract']
 
 export function NationalIdPage() {
   const [statuses, setStatuses] = useState<EngineStatus[] | null>(null)
@@ -106,7 +116,7 @@ export function NationalIdPage() {
     // Browser OCR can't read PDFs: fall back to the best engine that can, without overriding a usable choice.
     const usable = engine === 'tesseract' && isPdf(next) ? ENGINE_PREFERENCE.find((e) => e !== 'tesseract' && statuses?.find((s) => s.engine === e)?.available) : engine
     if (!usable) {
-      setScan({ status: 'error', message: 'Browser OCR reads photos only. Start the local model service or add a Claude API key to read PDFs.' })
+      setScan({ status: 'error', message: 'Browser OCR reads photos only. Start the Local ML Model service (see README) to read PDFs.' })
       return
     }
     if (usable !== engine) setEngine(usable)
@@ -140,6 +150,7 @@ export function NationalIdPage() {
       <SheetHeader
         title="National ID Reader"
         description="Read an Egyptian national ID from a photo or PDF scan — front, back, or both on one page. Every value stays editable, and the cross-checks re-run as you correct it."
+        illustration={<IdIllustration className="h-auto w-full" />}
         cells={[
           { label: 'Engine', value: engineName(result?.engine ?? engine) },
           {
@@ -150,9 +161,11 @@ export function NationalIdPage() {
         ]}
       />
 
-      <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <section aria-labelledby="source-heading" className="flex min-w-0 flex-col gap-5">
-          <SectionTitle id="source-heading">Source document</SectionTitle>
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-2 xl:grid-cols-[minmax(0,1fr)_3.5rem_minmax(0,1fr)] xl:gap-0">
+        <section aria-labelledby="source-heading" className="panel flex min-w-0 flex-col gap-5 p-4 sm:p-5">
+          <SectionTitle id="source-heading" icon={<IdCardIcon width={16} height={16} />}>
+            Source document
+          </SectionTitle>
           <EngineSelector
             statuses={statuses}
             value={engine}
@@ -182,17 +195,20 @@ export function NationalIdPage() {
             <Button variant="secondary" size="sm" onClick={async () => processFile(await createSampleCardFile())} disabled={isProcessing}>
               Try a sample card
             </Button>
-            <span className="text-xs text-ink-600">The sample is fictional. Flat, well-lit, upright photos read best.</span>
+            <span className="text-xs text-fg-muted">The sample is fictional. Flat, well-lit, upright photos read best.</span>
           </div>
         </section>
 
-        <section aria-labelledby="data-heading" aria-busy={isProcessing} className="flex min-w-0 flex-col gap-5">
+        <FlowConnector state={isProcessing ? 'flowing' : result ? 'full' : 'idle'} />
+
+        <section aria-labelledby="data-heading" aria-busy={isProcessing} className="panel flex min-w-0 flex-col gap-5 p-4 sm:p-5">
           <SectionTitle
             id="data-heading"
+            icon={<PackageIcon width={16} height={16} />}
             aside={
               result && (
-                <span className="figures text-xs text-ink-600">
-                  {result.model} · {result.device} · {(result.elapsedMs / 1000).toFixed(1)} s
+                <span className="figures text-xs text-fg-muted">
+                  {result.model} · {result.device} · <span className="whitespace-nowrap">{(result.elapsedMs / 1000).toFixed(1)} s</span>
                 </span>
               )
             }
@@ -202,14 +218,14 @@ export function NationalIdPage() {
 
           {scan.status === 'processing' && (
             <div role="status" className="flex flex-col gap-2">
-              <p className="text-sm font-semibold text-ink-950">{scan.step}</p>
-              <div className="relative h-1 overflow-hidden bg-ink-200">
+              <p className="text-sm font-semibold text-fg">{scan.step}</p>
+              <div className="pipe relative h-2.5 overflow-hidden">
                 {scan.progress === null ? (
                   // Unknown duration (a single request): an honest indeterminate sweep, not fake percentages.
-                  <div className="absolute inset-y-0 w-1/3 bg-cobalt-600 motion-safe:animate-indeterminate motion-reduce:w-full motion-reduce:animate-pulse" />
+                  <div className="pipe-water absolute inset-y-0 w-1/3 motion-safe:animate-indeterminate motion-reduce:w-full motion-reduce:animate-pulse" />
                 ) : (
                   <div
-                    className="h-full origin-left bg-cobalt-600 transition-transform duration-300 ease-[var(--ease-out)]"
+                    className="pipe-water h-full origin-left transition-transform duration-300 ease-[var(--ease-out)]"
                     style={{ transform: `scaleX(${scan.progress})` }}
                   />
                 )}
@@ -218,13 +234,13 @@ export function NationalIdPage() {
           )}
 
           {scan.status === 'error' && (
-            <p key={scan.message} role="alert" className="border-[1.5px] border-fail-600 bg-fail-50 px-3 py-2.5 text-sm text-fail-700 motion-safe:animate-reveal-down">
+            <p key={scan.message} role="alert" className="rounded-[var(--radius-fitting)] bg-fail-soft px-3.5 py-3 text-sm text-fail motion-safe:animate-reveal-down">
               {scan.message}
             </p>
           )}
 
           {result && result.warnings.length > 0 && (
-            <div role="alert" className="border-[1.5px] border-caution-600 bg-caution-50 px-3 py-2.5 text-sm text-caution-700 motion-safe:animate-reveal-down">
+            <div role="alert" className="rounded-[var(--radius-fitting)] bg-warn-soft px-3.5 py-3 text-sm text-warn motion-safe:animate-reveal-down">
               {result.warnings.map((warning) => (
                 <p key={warning}>{warning}</p>
               ))}
@@ -234,15 +250,15 @@ export function NationalIdPage() {
           {(scan.status === 'idle' || scan.status === 'processing' || scan.status === 'error') && !result ? (
             // Designed absence: the register of what will be extracted, before anything is read.
             <div className={isProcessing ? 'opacity-60' : ''}>
-              <p className="mb-2 text-sm text-ink-600">
+              <p className="mb-2 text-sm text-fg-muted">
                 These fields are read from the card, numbered as they will be marked on it:
               </p>
-              <ol className="grid grid-cols-1 border-t border-ink-950 sm:grid-cols-2 sm:gap-x-6">
+              <ol className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                 {FIELD_ORDER.map((key, index) => (
-                  <li key={key} className="flex items-center gap-3 border-b border-ink-200 py-2">
-                    <span className="balloon text-ink-400">{index + 1}</span>
-                    <span className="text-sm font-medium text-ink-900">{FIELD_META[key].label}</span>
-                    <span className="ml-auto text-[0.6875rem] text-ink-500">{FIELD_META[key].side === 'front' ? 'Front' : 'Back'}</span>
+                  <li key={key} className="flex items-center gap-3 rounded-[var(--radius-fitting)] bg-surface-2/70 px-3 py-2">
+                    <span className="tag">{index + 1}</span>
+                    <span className="text-sm font-medium text-fg">{FIELD_META[key].label}</span>
+                    <span className="ml-auto text-[0.6875rem] text-fg-subtle">{FIELD_META[key].side === 'front' ? 'Front' : 'Back'}</span>
                   </li>
                 ))}
               </ol>
@@ -260,22 +276,22 @@ export function NationalIdPage() {
               />
 
               <div>
-                <h3 className="spec-label mb-2 !text-ink-950">Cross-checks</h3>
+                <h3 className="mb-2 text-sm font-semibold text-fg">Cross-checks</h3>
                 <ChecksTable checks={checks} />
               </div>
 
               {parsedId?.ok && (
                 <div>
-                  <h3 className="spec-label mb-3 !text-ink-950">National number, decoded</h3>
+                  <h3 className="mb-3 text-sm font-semibold text-fg">National number, decoded</h3>
                   {/* Keyed by the number: a newly valid ID replays the split so the change is noticed. */}
                   <IdStructure key={parsedId.info.id} info={parsedId.info} />
                 </div>
               )}
 
               {result.rawText !== null && (
-                <details className="text-xs text-ink-600">
+                <details className="text-xs text-fg-muted">
                   <summary className="cursor-pointer select-none font-semibold">Raw OCR text</summary>
-                  <pre dir="rtl" className="mt-2 max-h-60 overflow-auto whitespace-pre-wrap border border-ink-200 bg-ink-50 p-3 font-sans">
+                  <pre dir="rtl" className="mt-2 max-h-60 overflow-auto whitespace-pre-wrap rounded-[var(--radius-fitting)] bg-surface-2 p-3 font-sans">
                     {result.rawText.trim() || '(empty)'}
                   </pre>
                 </details>

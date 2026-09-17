@@ -29,9 +29,8 @@ export function buildRows(fields: ReadField[], alwaysShow: FieldKey[]): FieldRow
 }
 
 export const ENGINE_NAMES: Record<ReaderEngine, { name: string; kind: string }> = {
-  'local-model': { name: 'Local model', kind: 'Deep learning · on this PC' },
-  claude: { name: 'Claude', kind: 'Vision model · API' },
-  tesseract: { name: 'Browser OCR', kind: 'Tesseract · fallback' },
+  'local-model': { name: 'Local ML Model', kind: 'Deep learning · both sides · PDF' },
+  tesseract: { name: 'Browser OCR', kind: 'Tesseract · front photos · fallback' },
 }
 
 export const engineName = (engine: ReaderEngine) => ENGINE_NAMES[engine].name

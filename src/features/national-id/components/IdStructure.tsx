@@ -32,7 +32,7 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
       term: 'Birth date',
       detail: (
         <>
-          {dateFormatter.format(info.birthDate)} <span className="font-normal text-ink-600">· {info.age} years</span>
+          {dateFormatter.format(info.birthDate)} <span className="font-normal text-fg-muted">· {info.age} years</span>
         </>
       ),
     },
@@ -43,7 +43,7 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
       detail: (
         <>
           {info.governorate.en}{' '}
-          <span className="font-normal text-ink-600" lang="ar">
+          <span className="font-normal text-fg-muted" lang="ar">
             {info.governorate.ar}
           </span>
         </>
@@ -56,7 +56,7 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
       detail: (
         <>
           <span className="figures">{info.checkDigit}</span>{' '}
-          <span className="text-xs font-normal text-ink-500">not verified — algorithm is not public</span>
+          <span className="text-xs font-normal text-fg-subtle">not verified — algorithm is not public</span>
         </>
       ),
     },
@@ -72,7 +72,7 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
             onMouseEnter={() => setActive(segment.part)}
             className="flex flex-col items-center gap-1 motion-safe:animate-[segment-split_520ms_var(--ease-out)_both] motion-safe:[animation-delay:calc(var(--i)*45ms)]"
           >
-            <span className="flex border-[1.5px] border-ink-950 bg-white px-1 py-0.5 font-semibold tabular-nums text-ink-950">
+            <span className="flex rounded-[var(--radius-fitting)] border border-line-strong bg-surface px-1.5 py-1 font-semibold tabular-nums text-fg shadow-panel">
               {info.id
                 .slice(...segment.slice)
                 .split('')
@@ -81,20 +81,20 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
                   return (
                     <span
                       key={digitIndex}
-                      className={`px-[1.5px] text-lg leading-7 transition-colors duration-200 ${
-                        isLit(segment.part, digitIndex) ? 'bg-cobalt-600 text-white' : ''
-                      } ${digitIndex === 12 ? 'underline decoration-ink-400 decoration-dotted underline-offset-4' : ''}`}
+                      className={`rounded px-[2px] text-lg leading-7 transition-colors duration-200 ${
+                        isLit(segment.part, digitIndex) ? 'bg-accent text-on-accent' : ''
+                      } ${digitIndex === 12 ? 'underline decoration-line-strong decoration-dotted underline-offset-4' : ''}`}
                     >
                       {digit}
                     </span>
                   )
                 })}
             </span>
-            {/* A dimension tick under each segment, then its caption. */}
-            <span aria-hidden="true" className="h-1.5 w-full border-x border-b border-ink-400" />
+            {/* A short outlet under each segment, then its caption. */}
+            <span aria-hidden="true" className="pipe h-1.5 w-1.5" />
             <span
-              className={`text-[0.625rem] font-semibold uppercase tracking-[0.06em] transition-colors duration-200 motion-safe:animate-[caption-drop_420ms_var(--ease-out)_both] motion-safe:[animation-delay:calc(120ms+var(--i)*45ms)] ${
-                active === segment.part || (active === 'birth' && segment.part === 'century') ? 'text-cobalt-700' : 'text-ink-600'
+              className={`text-[0.6875rem] font-medium transition-colors duration-200 motion-safe:animate-[caption-drop_420ms_var(--ease-out)_both] motion-safe:[animation-delay:calc(120ms+var(--i)*45ms)] ${
+                active === segment.part || (active === 'birth' && segment.part === 'century') ? 'text-accent-strong' : 'text-fg-muted'
               }`}
             >
               {segment.label}
@@ -103,14 +103,14 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
         ))}
       </div>
 
-      <p className="mt-3 flex flex-wrap items-baseline gap-2 text-xs text-ink-600">
+      <p className="mt-3 flex flex-wrap items-baseline gap-2 text-xs text-fg-muted">
         As printed on the card
-        <bdi dir="rtl" lang="ar" className="text-sm font-medium tracking-wide text-ink-900">
+        <bdi dir="rtl" lang="ar" className="text-sm font-medium tracking-wide text-fg">
           {toArabicDigits(info.id)}
         </bdi>
       </p>
 
-      <dl className="mt-3 grid grid-cols-[auto_1fr] border-t border-ink-950 text-sm">
+      <dl className="mt-3 grid grid-cols-[auto_1fr] gap-y-0.5 text-sm">
         {rows.map((row) => (
           <div
             key={row.part}
@@ -119,12 +119,12 @@ export function IdStructure({ info }: { info: NationalIdInfo }) {
             onMouseLeave={() => setActive(null)}
             onFocus={() => setActive(row.part)}
             onBlur={() => setActive(null)}
-            className={`col-span-2 grid grid-cols-subgrid gap-x-6 border-b border-ink-200 px-1 py-2 outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cobalt-600 ${
-              active === row.part ? 'bg-cobalt-50' : ''
+            className={`col-span-2 grid grid-cols-subgrid gap-x-6 rounded-[var(--radius-fitting)] px-2.5 py-2 outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent ${
+              active === row.part ? 'bg-accent-soft' : ''
             }`}
           >
-            <dt className="text-ink-600">{row.term}</dt>
-            <dd className="font-semibold text-ink-950">{row.detail}</dd>
+            <dt className="text-fg-muted">{row.term}</dt>
+            <dd className="font-semibold text-fg">{row.detail}</dd>
           </div>
         ))}
       </dl>

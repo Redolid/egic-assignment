@@ -80,7 +80,7 @@ export function AddProductForm({ carName, onAdd }: AddProductFormProps) {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate aria-label={`Add a line to ${carName}`} className="bg-ink-50 px-3 py-3 sm:px-4">
+    <form ref={formRef} onSubmit={handleSubmit} noValidate aria-label={`Add a line to ${carName}`} className="rounded-[var(--radius-bend)] bg-surface-2 px-3 py-3 sm:px-4">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1fr)_6.5rem_8.5rem_auto] sm:items-start">
         <TextField
           ref={nameRef}
@@ -110,7 +110,7 @@ export function AddProductForm({ carName, onAdd }: AddProductFormProps) {
         />
         <Button
           type="submit"
-          className={`col-span-2 justify-center sm:col-span-1 sm:mt-[1.4rem] ${receipt ? 'bg-pass-600! hover:bg-pass-700!' : ''}`}
+          className={`col-span-2 justify-center sm:col-span-1 sm:mt-[1.4rem] ${receipt ? 'bg-pass! hover:bg-pass!' : ''}`}
         >
           {/* The plus turns into a check for a moment: the line was accepted. */}
           <span className="relative grid h-4 w-4 place-items-center">
@@ -132,7 +132,7 @@ export function AddProductForm({ carName, onAdd }: AddProductFormProps) {
           {receipt ? 'Added' : 'Add line'}
         </Button>
       </div>
-      <p aria-live="polite" className="min-h-0 text-xs text-ink-700 empty:hidden">
+      <p aria-live="polite" className="min-h-0 text-xs text-fg-muted empty:hidden">
         {receipt && <span className="mt-2 block motion-safe:animate-reveal-down">{receipt}</span>}
       </p>
     </form>

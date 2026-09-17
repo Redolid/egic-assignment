@@ -9,7 +9,7 @@ interface TraderListProps {
   onHover: (id: number | null) => void
 }
 
-/** The trader register: numbered like the map balloons, one travelling selection band. */
+/** The trader list: numbered like the map markers, one travelling selection band. */
 export function TraderList({ traders, selectedId, hoveredId, onSelect, onHover }: TraderListProps) {
   const listRef = useRef<HTMLUListElement>(null)
   const indicatorRef = useRef<HTMLLIElement>(null)
@@ -66,12 +66,12 @@ export function TraderList({ traders, selectedId, hoveredId, onSelect, onHover }
   }, [selectedId])
 
   return (
-    <ul ref={listRef} className="relative overflow-y-auto lg:h-full" onMouseLeave={() => onHover(null)}>
+    <ul ref={listRef} className="relative overflow-y-auto p-2 lg:h-full" onMouseLeave={() => onHover(null)}>
       <li
         ref={indicatorRef}
         aria-hidden="true"
         role="presentation"
-        className="pointer-events-none absolute inset-x-0 top-0 bg-cobalt-50 opacity-0 shadow-[inset_0_0_0_1.5px_var(--color-cobalt-600)] transition-[transform,height,opacity] duration-[360ms] ease-[var(--ease-out)] motion-reduce:transition-opacity"
+        className="pointer-events-none absolute inset-x-2 top-0 rounded-[var(--radius-fitting)] bg-accent-soft opacity-0 shadow-[inset_0_0_0_1px_var(--accent)] transition-[transform,height,opacity] duration-[360ms] ease-[var(--ease-out)] motion-reduce:transition-opacity"
       />
       {traders.map((trader, index) => {
         const isSelected = trader.id === selectedId
@@ -79,7 +79,7 @@ export function TraderList({ traders, selectedId, hoveredId, onSelect, onHover }
         return (
           <li
             key={trader.id}
-            className="relative border-b border-ink-200"
+            className="relative"
             ref={(element) => {
               if (element) itemRefs.current.set(trader.id, element)
               else itemRefs.current.delete(trader.id)
@@ -92,22 +92,18 @@ export function TraderList({ traders, selectedId, hoveredId, onSelect, onHover }
               onMouseEnter={() => onHover(trader.id)}
               onFocus={() => onHover(trader.id)}
               onBlur={() => onHover(null)}
-              className={`grid w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-3 py-2.5 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt-600 ${
-                isHovered ? 'bg-ink-50' : ''
+              className={`grid w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-[var(--radius-fitting)] px-3 py-2.5 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent ${
+                isHovered ? 'bg-surface-2' : ''
               }`}
             >
-              <span
-                className={`balloon transition-colors duration-200 ${
-                  isSelected ? '!border-cobalt-600 !bg-cobalt-600 text-white' : isHovered ? 'text-cobalt-600' : 'text-ink-950'
-                }`}
-              >
+              <span data-active={isSelected} className="tag">
                 {index + 1}
               </span>
               <span className="min-w-0">
-                <span dir="rtl" lang="ar" className="block truncate text-right text-[0.9375rem] font-semibold text-ink-950">
+                <span dir="rtl" lang="ar" className="block truncate text-right text-[0.9375rem] font-semibold text-fg">
                   {trader.name}
                 </span>
-                <span className="figures mt-0.5 flex justify-between gap-2 text-xs text-ink-600">
+                <span className="figures mt-0.5 flex justify-between gap-2 text-xs text-fg-muted">
                   <span>Trader {trader.id}</span>
                   <span>
                     {trader.lat.toFixed(4)}, {trader.lng.toFixed(4)}

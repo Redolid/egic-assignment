@@ -1,49 +1,165 @@
 @import 'tailwindcss';
 
 /* ===========================================================================
-   EGIC Operations Toolkit — "DIN product data sheet"
-   A white sheet ruled in ink: 2px section rules, 1px hairlines, condensed caps
-   for sheet titles, tabular figures, and catalogue cobalt only for actions and
-   selection. Numbered balloons cross-reference values, as on a technical drawing.
+   EGIC Operations Toolkit — "Pipe Colour Code"
+   The app is laid out like a plumbing run: each tool carries the colour of its
+   pipe (supply green · cold-water blue · hot-water orange), panels have soft
+   pipe-bend corners, controls are pill-shaped pipe segments, and flow lines
+   carry work from source to result. Light "water-white" and dark "duct-navy"
+   themes share one token set.
    =========================================================================== */
 
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Registered so the tool accent glides between pipe colours on navigation. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0f7f56;
+}
+@property --accent-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0b6644;
+}
+@property --accent-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e3f4ec;
+}
+
+:root {
+  color-scheme: light;
+  /* Water-white theme */
+  --canvas: #f4f8f9;
+  --surface: #ffffff;
+  --surface-2: #eaf1f3;
+  --line: #dce6ea;
+  --line-strong: #b7c7ce;
+  --fg: #0f1c2b;
+  --fg-muted: #4a5b6b;
+  --fg-subtle: #5f6f7d;
+  --shadow-color: 212 40% 12%;
+
+  --pipe-green: #0f7f56;
+  --pipe-green-strong: #0b6644;
+  --pipe-green-soft: #e3f4ec;
+  --pipe-blue: #2563d8;
+  --pipe-blue-strong: #1d4faf;
+  --pipe-blue-soft: #e6eefc;
+  --pipe-orange: #c4410d;
+  --pipe-orange-strong: #9e340a;
+  --pipe-orange-soft: #fdede5;
+  --pipe-steel: #9fb2bd;
+  --on-pipe: #ffffff;
+
+  --pass: #0f7f56;
+  --pass-soft: #e3f4ec;
+  --warn: #b45309;
+  --warn-soft: #fdf1e1;
+  --fail: #c62828;
+  --fail-soft: #fdeaea;
+
+  --accent: var(--pipe-green);
+  --accent-strong: var(--pipe-green-strong);
+  --accent-soft: var(--pipe-green-soft);
+  --on-accent: var(--on-pipe);
+
+  transition:
+    --accent 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    --accent-strong 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    --accent-soft 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  /* Duct-navy theme: the same ramp, mirrored; pipe colours brightened to glow on navy. */
+  --canvas: #0b1520;
+  --surface: #111e2b;
+  --surface-2: #172838;
+  --line: #22364a;
+  --line-strong: #34506a;
+  --fg: #e8f0f5;
+  --fg-muted: #a9bbcb;
+  --fg-subtle: #8499ac;
+  --shadow-color: 212 60% 3%;
+
+  --pipe-green: #3ccb8f;
+  --pipe-green-strong: #6bddae;
+  --pipe-green-soft: rgb(60 203 143 / 0.14);
+  --pipe-blue: #6ea2ff;
+  --pipe-blue-strong: #9cc0ff;
+  --pipe-blue-soft: rgb(110 162 255 / 0.16);
+  --pipe-orange: #ff8a57;
+  --pipe-orange-strong: #ffae88;
+  --pipe-orange-soft: rgb(255 138 87 / 0.15);
+  --pipe-steel: #3b556c;
+  --on-pipe: #071522;
+
+  --pass: #3ccb8f;
+  --pass-soft: rgb(60 203 143 / 0.14);
+  --warn: #f5a524;
+  --warn-soft: rgb(245 165 36 / 0.14);
+  --fail: #ff6b6b;
+  --fail-soft: rgb(255 107 107 / 0.14);
+}
+
+/* Each tool runs on its own pipe colour. */
+:root[data-tool='pricing'] {
+  --accent: var(--pipe-green);
+  --accent-strong: var(--pipe-green-strong);
+  --accent-soft: var(--pipe-green-soft);
+}
+:root[data-tool='id'] {
+  --accent: var(--pipe-blue);
+  --accent-strong: var(--pipe-blue-strong);
+  --accent-soft: var(--pipe-blue-soft);
+}
+:root[data-tool='traders'] {
+  --accent: var(--pipe-orange);
+  --accent-strong: var(--pipe-orange-strong);
+  --accent-soft: var(--pipe-orange-soft);
+}
+
+@theme inline {
+  --font-sans: 'Alexandria Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+
+  --color-pipe-green: var(--pipe-green);
+  --color-pipe-green-soft: var(--pipe-green-soft);
+  --color-pipe-blue: var(--pipe-blue);
+  --color-pipe-blue-soft: var(--pipe-blue-soft);
+  --color-pipe-orange: var(--pipe-orange);
+  --color-pipe-orange-soft: var(--pipe-orange-soft);
+  --color-pipe-steel: var(--pipe-steel);
+
+  --color-pass: var(--pass);
+  --color-pass-soft: var(--pass-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-fail: var(--fail);
+  --color-fail-soft: var(--fail-soft);
+
+  --shadow-panel: 0 1px 2px hsl(var(--shadow-color) / 0.06), 0 10px 28px -14px hsl(var(--shadow-color) / 0.18);
+  --shadow-lifted: 0 18px 36px -16px hsl(var(--shadow-color) / 0.35);
+}
+
 @theme {
-  --font-sans: 'Archivo Variable', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: 'IBM Plex Sans Arabic', 'Archivo Variable', ui-sans-serif, sans-serif;
-
-  /* Ink: neutral greys of printed catalogue ink. 600+ pass AA on white. */
-  --color-ink-50: #f6f6f5;
-  --color-ink-100: #ededeb;
-  --color-ink-200: #dcdcd9;
-  --color-ink-300: #c4c4c0;
-  --color-ink-400: #9b9b97;
-  --color-ink-500: #6d6d69;
-  --color-ink-600: #55554f;
-  --color-ink-700: #3f3f3b;
-  --color-ink-800: #2a2a27;
-  --color-ink-900: #1a1a18;
-  --color-ink-950: #0e0e0d;
-
-  /* Catalogue cobalt: actions, links, selection, focus. Never decoration. */
-  --color-cobalt-50: #eef3fc;
-  --color-cobalt-100: #dae5f7;
-  --color-cobalt-200: #b3c9ee;
-  --color-cobalt-300: #7fa3e0;
-  --color-cobalt-500: #1d5bc6;
-  --color-cobalt-600: #0047ab;
-  --color-cobalt-700: #003b8e;
-  --color-cobalt-800: #002f70;
-
-  /* Inspection stamps: pass / fail / caution. */
-  --color-pass-50: #eaf5ee;
-  --color-pass-600: #17753a;
-  --color-pass-700: #115c2d;
-  --color-fail-50: #fdeeee;
-  --color-fail-600: #c0141c;
-  --color-fail-700: #9a0f16;
-  --color-caution-50: #fdf4e4;
-  --color-caution-600: #a15c00;
-  --color-caution-700: #7d4700;
+  --radius-bend: 1.125rem;
+  --radius-fitting: 0.625rem;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
@@ -54,9 +170,23 @@
   --animate-row-arrive: row-arrive 1.6s var(--ease-out);
   --animate-reveal-down: reveal-down 260ms var(--ease-out);
   --animate-lift: lift 180ms var(--ease-out) both;
-  --animate-draw-in: draw-in 420ms var(--ease-out) both;
+  --animate-flow: flow 900ms linear infinite;
+  --animate-draw-in: draw-in 520ms var(--ease-out) both;
 }
 
+/* A bar filling from its inlet, like water entering a pipe. */
+@keyframes draw-in {
+  from {
+    clip-path: inset(0 100% 0 0 round 9999px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 9999px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Keyframes
+   --------------------------------------------------------------------------- */
 @keyframes scan {
   from {
     transform: translateY(-55%);
@@ -77,7 +207,7 @@
 
 @keyframes row-arrive {
   from {
-    background-color: var(--color-cobalt-100);
+    background-color: var(--accent-soft);
   }
   to {
     background-color: transparent;
@@ -86,11 +216,11 @@
 
 @keyframes reveal-down {
   from {
-    clip-path: inset(0 0 100% 0);
+    clip-path: inset(0 0 100% 0 round 0.625rem);
     transform: translateY(-4px);
   }
   to {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0 round 0.625rem);
     transform: translateY(0);
   }
 }
@@ -98,32 +228,37 @@
 @keyframes lift {
   from {
     transform: rotate(0deg) scale(1);
-    box-shadow: 0 1px 0 var(--color-ink-900);
   }
   to {
-    transform: rotate(-1.5deg) scale(1.02);
-    box-shadow: 0 16px 28px -14px rgb(14 14 13 / 0.45);
+    transform: rotate(-2deg) scale(1.03);
+    box-shadow: var(--shadow-lifted);
   }
 }
 
-/* A rule or leader line drawn out from its origin, like a pen stroke. */
-@keyframes draw-in {
+/* Water moving along a pipe: a repeating highlight sliding along the segment. */
+@keyframes flow {
   from {
-    clip-path: inset(0 100% 0 0);
+    background-position-x: 0;
   }
   to {
-    clip-path: inset(0 0 0 0);
+    background-position-x: 28px;
   }
 }
 
-/* An inspection stamp pressed onto the sheet when a check's verdict changes. */
+/* Dashes travelling along an SVG pipe (illustrations). */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -34;
+  }
+}
+
 @keyframes stamp {
   from {
-    transform: scale(1.35);
+    transform: scale(1.3);
     opacity: 0;
   }
   60% {
-    transform: scale(0.96);
+    transform: scale(0.97);
     opacity: 1;
   }
 }
@@ -141,11 +276,22 @@
   }
 }
 
+@keyframes theme-fill {
+  from {
+    clip-path: circle(0 at var(--fill-x, 100%) var(--fill-y, 0%));
+  }
+  to {
+    clip-path: circle(var(--fill-r, 150vmax) at var(--fill-x, 100%) var(--fill-y, 0%));
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base + browser surfaces
+   --------------------------------------------------------------------------- */
 @layer base {
   html {
-    color-scheme: light;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: var(--color-ink-300) transparent;
+    scrollbar-color: var(--line-strong) transparent;
   }
 
   html,
@@ -155,7 +301,7 @@
   }
 
   body {
-    @apply bg-white text-ink-900 antialiased;
+    @apply bg-canvas text-fg antialiased;
   }
 
   h1,
@@ -164,19 +310,14 @@
     text-wrap: balance;
   }
 
-  [lang='ar'],
-  [dir='rtl'] {
-    font-family: var(--font-arabic);
-  }
-
   ::selection {
-    background-color: var(--color-cobalt-100);
-    color: var(--color-cobalt-800);
+    background-color: var(--accent-soft);
+    color: var(--accent-strong);
   }
 
   input,
   textarea {
-    caret-color: var(--color-cobalt-600);
+    caret-color: var(--accent);
   }
 
   * {
@@ -185,55 +326,81 @@
 }
 
 @layer components {
-  /* Condensed caps for sheet and section titles. */
-  .sheet-title {
-    font-stretch: 72%;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    line-height: 0.95;
+  /* Panels: soft pipe-bend corners on the canvas. */
+  .panel {
+    border-radius: var(--radius-bend);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-panel);
   }
 
-  /* Small tracked caps for column heads and cell labels. */
-  .spec-label {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-600);
+  .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--fg-muted);
   }
 
   .figures {
     font-variant-numeric: tabular-nums lining-nums;
   }
 
-  /* Numbered balloon, as used on technical drawings to reference a parts list. */
-  .balloon {
+  /* Numbered tag: links a value on one surface to the same value elsewhere (ID fields, map traders). */
+  .tag {
     display: inline-grid;
     place-items: center;
     flex-shrink: 0;
-    width: 1.5rem;
+    min-width: 1.5rem;
     height: 1.5rem;
+    padding: 0 0.3rem;
     border-radius: 9999px;
-    border: 1.5px solid currentColor;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-size: 0.6875rem;
-    font-weight: 700;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     line-height: 1;
-    background: #fff;
+    transition:
+      background-color 200ms,
+      color 200ms,
+      box-shadow 200ms;
+  }
+
+  .tag[data-active='true'] {
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  /* A pipe segment: rounded tube with a highlight line, used by the nav and flow connectors. */
+  .pipe {
+    border-radius: 9999px;
+    background: var(--pipe-steel);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+  }
+
+  .pipe-water {
+    border-radius: 9999px;
+    background-color: var(--accent);
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0 16px,
+      rgb(255 255 255 / 0.28) 16px 22px,
+      transparent 22px 28px
+    );
+    background-size: 28px 100%;
   }
 
   /* Dimension bracket on the subtotal column while its total is inspected. */
   table[data-summing='true'] td[data-col='subtotal'] {
-    box-shadow: inset -2px 0 0 var(--color-cobalt-600);
-    color: var(--color-cobalt-700);
+    box-shadow: inset -2px 0 0 var(--accent);
+    color: var(--accent-strong);
   }
 }
 
 /* ---------------------------------------------------------------------------
    Page transitions (View Transitions API, driven by components/layout/AppLayout)
-   The sheets are ordered like the register tabs, so a sheet slides in from the
-   side of the tab you picked while the black active tab moves across.
+   Tools sit along one pipeline, so a page arrives from the side of the tool you
+   picked while the water in the header pipe runs to it.
    --------------------------------------------------------------------------- */
 :root {
   --nav-direction: 1;
@@ -257,18 +424,14 @@
 }
 
 ::view-transition-new(page) {
-  animation: page-enter 320ms var(--ease-out) both;
-}
-
-::view-transition-group(nav-tab) {
-  animation-duration: 320ms;
-  animation-timing-function: var(--ease-out);
+  animation: page-enter 340ms var(--ease-out) both;
 }
 
 @keyframes page-leave {
   to {
     opacity: 0;
     transform: translateX(calc(var(--nav-direction) * -24px));
+    filter: blur(2px);
   }
 }
 
@@ -276,45 +439,79 @@
   from {
     opacity: 0;
     transform: translateX(calc(var(--nav-direction) * 36px));
+    filter: blur(2px);
   }
 }
 
+/* Theme switch: the new theme fills the screen from the toggle, like water filling a tank. */
+:root[data-theme-switching] ::view-transition-group(*) {
+  animation: none;
+}
+:root[data-theme-switching] ::view-transition-old(*),
+:root[data-theme-switching] ::view-transition-new(*) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+:root[data-theme-switching] ::view-transition-new(root) {
+  animation: theme-fill 560ms var(--ease-in-out) both;
+}
+:root[data-theme-switching] .app-header,
+:root[data-theme-switching] .app-main {
+  view-transition-name: none;
+}
+
 /* ---------------------------------------------------------------------------
-   Traders map — Leaflet surfaces in the sheet's vocabulary
+   Traders map — Leaflet surfaces in the pipe vocabulary
    --------------------------------------------------------------------------- */
-.leaflet-container {
+:root .leaflet-container {
   font-family: var(--font-sans);
-  background: var(--color-ink-100);
+  background: var(--surface-2);
+}
+
+/* Light: street colours softened so the orange markers lead. Dark: the same tiles inverted and
+   turned back to their original hues, landing close to the dark canvas. */
+.leaflet-tile-pane {
+  filter: saturate(0.75) contrast(0.95);
+}
+
+:root[data-theme='dark'] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) saturate(0.55) brightness(0.9) contrast(0.85);
 }
 
 .leaflet-bar {
-  border: 1.5px solid var(--color-ink-900) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-fitting) !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-panel) !important;
 }
 
 .leaflet-bar a {
-  border-radius: 0 !important;
-  color: var(--color-ink-900) !important;
-  border-bottom-color: var(--color-ink-900) !important;
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  border-bottom-color: var(--line) !important;
   transition: background-color 150ms, color 150ms;
 }
 
 .leaflet-bar a:hover {
-  background: var(--color-ink-900) !important;
-  color: #fff !important;
+  background: var(--accent-soft) !important;
+  color: var(--accent-strong) !important;
 }
 
-.leaflet-popup-content-wrapper {
-  border-radius: 0;
-  border: 1.5px solid var(--color-ink-900);
-  box-shadow: 0 14px 28px -16px rgb(14 14 13 / 0.45);
+.leaflet-container .leaflet-popup-content-wrapper,
+.leaflet-container .leaflet-popup-tip {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.leaflet-container .leaflet-popup-content-wrapper {
+  border-radius: var(--radius-bend);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lifted);
   transform-origin: 50% calc(100% + 12px);
   animation: popup-open 240ms var(--ease-out);
 }
 
-.leaflet-popup-tip {
-  border: 1.5px solid var(--color-ink-900);
+.leaflet-container .leaflet-popup-tip {
   box-shadow: none;
 }
 
@@ -322,16 +519,26 @@
   animation: popup-tip 240ms var(--ease-out);
 }
 
-.leaflet-popup-content {
-  margin: 0.75rem 0.875rem;
+.leaflet-container .leaflet-popup-content {
+  margin: 0.875rem 1rem;
 }
 
-.leaflet-popup-content a {
-  color: var(--color-cobalt-600);
+.leaflet-container .leaflet-popup-content a {
+  color: var(--accent-strong);
+}
+
+:root .leaflet-container a.leaflet-popup-close-button {
+  color: var(--fg-subtle);
 }
 
 .leaflet-control-attribution {
   font-size: 10px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent) !important;
+  color: var(--fg-subtle) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--fg-muted) !important;
 }
 
 @keyframes popup-open {
@@ -348,7 +555,7 @@
   }
 }
 
-/* Trader marker = a numbered balloon on a leader line, pointing at the exact location.
+/* Trader marker = a water drop carrying the trader's register number.
    Leaflet positions the outer element with transforms; motion lives on the inner body. */
 .trader-pin {
   background: none;
@@ -360,82 +567,50 @@
   display: block;
   width: 100%;
   height: 100%;
-  color: var(--color-ink-900);
+  color: var(--pipe-orange);
   transform-origin: 50% 100%;
+  filter: drop-shadow(0 4px 4px hsl(var(--shadow-color) / 0.35));
   transition:
     transform 220ms var(--ease-out),
     color 200ms var(--ease-out);
 }
 
-.trader-pin__balloon {
+.trader-pin__body svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Centred on the drop's inner circle (cy = 15 in the 30×40 icon). */
+.trader-pin__number {
   position: absolute;
-  left: 50%;
-  top: 0;
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  margin-left: -13px;
-  border-radius: 9999px;
-  border: 2px solid currentColor;
-  background: #fff;
+  inset: 0 0 auto 0;
+  height: 30px;
+  text-align: center;
   font:
-    700 11px/1 var(--font-sans);
+    600 11px/30px var(--font-sans);
   font-variant-numeric: tabular-nums;
-  box-shadow: 0 2px 6px -1px rgb(14 14 13 / 0.35);
-  transition:
-    background-color 200ms var(--ease-out),
-    color 200ms var(--ease-out);
-}
-
-.trader-pin__leader {
-  position: absolute;
-  left: 50%;
-  top: 25px;
-  bottom: 3px;
-  width: 2px;
-  margin-left: -1px;
-  background: currentColor;
-}
-
-.trader-pin__dot {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 7px;
-  height: 7px;
-  margin-left: -3.5px;
-  border-radius: 9999px;
-  background: currentColor;
-  box-shadow: 0 0 0 2px #fff;
+  color: var(--pipe-orange-strong);
 }
 
 .trader-pin.is-hovered .trader-pin__body {
-  transform: translateY(-3px);
-  color: var(--color-cobalt-600);
+  transform: translateY(-3px) scale(1.1);
 }
 
 .trader-pin.is-selected .trader-pin__body {
-  transform: translateY(-4px) scale(1.18);
-  color: var(--color-cobalt-600);
+  transform: translateY(-3px) scale(1.25);
+  color: var(--pipe-orange-strong);
 }
 
-.trader-pin.is-selected .trader-pin__balloon {
-  background: var(--color-cobalt-600);
-  color: #fff;
-  border-color: var(--color-cobalt-600);
-}
-
-/* A ring on the ground under the selected marker, pinging twice to say "here". */
 .trader-pin__ping {
   position: absolute;
   left: 50%;
-  bottom: -2px;
+  bottom: -3px;
   width: 20px;
   height: 8px;
   margin-left: -10px;
   border-radius: 50%;
-  border: 2px solid var(--color-cobalt-600);
+  border: 2px solid var(--pipe-orange);
   opacity: 0;
   pointer-events: none;
 }
@@ -459,6 +634,10 @@
    Reduced motion: keep state changes legible (colour, opacity), drop travel.
    --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+
   ::view-transition-old(page),
   ::view-transition-new(page) {
     animation: page-crossfade 160ms linear both;
@@ -468,8 +647,12 @@
     animation-direction: reverse;
   }
 
-  ::view-transition-group(nav-tab) {
-    animation-duration: 0s;
+  :root[data-theme-switching] ::view-transition-new(root) {
+    animation: page-crossfade 200ms linear both;
+  }
+
+  .pipe-water {
+    animation: none !important;
   }
 
   .trader-pin__body {
@@ -482,7 +665,7 @@
   }
 
   .trader-pin.is-selected .trader-pin__ping,
-  .leaflet-popup-content-wrapper,
+  .leaflet-container .leaflet-popup-content-wrapper,
   .leaflet-popup-tip-container {
     animation: none;
   }
@@ -491,5 +674,44 @@
 @keyframes page-crossfade {
   from {
     opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Print — the Cars & Products price summary (features/cars/components/PriceSummary)
+   --------------------------------------------------------------------------- */
+@page {
+  size: A4;
+  margin: 16mm 14mm;
+}
+
+@media print {
+  /* Paper is white: no dark canvas in the page margins either. */
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* A light palette pinned to the sheet, whatever theme is on screen. */
+  .price-sheet {
+    --fg: #0f1c2b;
+    --fg-muted: #4a5b6b;
+    --line: #dce6ea;
+    --line-strong: #9fb2bd;
+    --accent: #0f7f56;
+    --accent-strong: #0b6644;
+    --accent-soft: #e3f4ec;
+    --on-accent: #ffffff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .price-sheet tr {
+    break-inside: avoid;
   }
 }

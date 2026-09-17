@@ -9,22 +9,24 @@ import type { Trader } from '../lib/traders'
 import type { Selection } from '../selection'
 
 /*
- * Each trader is a numbered balloon on a leader line — the drawing convention for "item N is here" —
- * matching the number in the list. Hover and selection are CSS classes toggled on the existing marker
- * element (see index.css), so state changes animate instead of swapping icons.
+ * Each trader is a drop in the traders' pipe colour, carrying the same number as its list row.
+ * Hover and selection are CSS classes toggled on the existing marker element (see index.css),
+ * so state changes animate instead of swapping icons.
  */
-const balloonIcon = (number: number) =>
+const dropIcon = (number: number) =>
   L.divIcon({
     className: 'trader-pin',
     html: `<span class="trader-pin__body">
-        <span class="trader-pin__leader"></span>
-        <span class="trader-pin__dot"></span>
-        <span class="trader-pin__balloon">${number}</span>
+        <svg viewBox="0 0 30 40" aria-hidden="true">
+          <path d="M15 39C15 39 3 26 3 15a12 12 0 0 1 24 0c0 11-12 24-12 24Z" fill="currentColor" />
+          <circle cx="15" cy="15" r="8.5" style="fill: var(--surface)" />
+        </svg>
+        <span class="trader-pin__number">${number}</span>
         <span class="trader-pin__ping"></span>
       </span>`,
-    iconSize: [30, 46],
-    iconAnchor: [15, 43],
-    popupAnchor: [0, -46],
+    iconSize: [30, 40],
+    iconAnchor: [15, 39],
+    popupAnchor: [0, -40],
   })
 
 const FOCUS_ZOOM = 15
@@ -56,7 +58,7 @@ export function TradersMap({
     [traders],
   )
   // Stable icon objects: react-leaflet only calls setIcon (replacing the element) when the icon changes.
-  const icons = useMemo(() => new Map(traders.map((trader, index) => [trader.id, balloonIcon(index + 1)])), [traders])
+  const icons = useMemo(() => new Map(traders.map((trader, index) => [trader.id, dropIcon(index + 1)])), [traders])
 
   // Reflect hover and selection on the markers themselves (classes → CSS transitions).
   useEffect(() => {
@@ -93,8 +95,9 @@ export function TradersMap({
 
   return (
     // `isolate` keeps Leaflet's high z-indexes from covering the sticky page header.
-    <div className="relative isolate h-full w-full overflow-hidden border-[1.5px] border-ink-950">
+    <div className="panel relative isolate h-full w-full overflow-hidden">
       <MapContainer ref={setMap} bounds={bounds} boundsOptions={{ padding: [48, 48] }} scrollWheelZoom className="h-full w-full">
+        {/* One free tile set for both themes; dark mode re-tones it with a CSS filter (index.css). */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -119,14 +122,16 @@ export function TradersMap({
           >
             <Popup>
               <div className="min-w-48 font-sans">
-                <div className="flex items-center gap-2 border-b border-ink-200 pb-2">
-                  <span className="balloon text-ink-950">{index + 1}</span>
-                  <span className="spec-label">Trader {trader.id}</span>
+                <div className="flex items-center gap-2 border-b border-line pb-2">
+                  <span data-active="true" className="tag">
+                    {index + 1}
+                  </span>
+                  <span className="label">Trader {trader.id}</span>
                 </div>
-                <div dir="rtl" lang="ar" className="pt-2 text-base font-semibold text-ink-950">
+                <div dir="rtl" lang="ar" className="pt-2 text-base font-semibold text-fg">
                   {trader.name}
                 </div>
-                <div className="figures mt-0.5 text-xs text-ink-600">
+                <div className="figures mt-0.5 text-xs text-fg-muted">
                   {trader.lat.toFixed(5)}° N, {trader.lng.toFixed(5)}° E
                 </div>
                 <a
@@ -155,7 +160,7 @@ export function TradersMap({
           map?.closePopup()
           map?.flyToBounds(bounds, { padding: [48, 48], duration: 0.8, animate: !prefersReducedMotion() })
         }}
-        className="absolute right-3 top-3 z-[1000] inline-flex h-9 items-center gap-1.5 border-[1.5px] border-ink-950 bg-white px-3 text-sm font-semibold text-ink-950 transition-colors duration-150 hover:bg-ink-950 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt-600"
+        className="absolute right-3 top-3 z-[1000] inline-flex h-9 items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 text-sm font-semibold text-fg shadow-lifted transition-colors duration-150 hover:bg-accent hover:text-on-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <FitBoundsIcon width={15} height={15} />
         Show all

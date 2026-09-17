@@ -29,7 +29,7 @@ Built for EGIC specifically: its trader network data, Egyptian ID structure (Ara
 - Bilingual content: English interface; Arabic personal names, addresses and trader names (right-to-left) inside it.
 - Money in EGP with 2 decimals; quantities in whole units.
 - ID documents arrive as phone photos or scanned PDFs, sometimes both card sides on one page.
-- The ID reader can run on a local deep-learning OCR service (GPU), Claude vision (API key), or in-browser Tesseract; engine availability varies per machine.
+- The ID reader runs on a local deep-learning OCR service (the Local ML Model, GPU when available) or in-browser Tesseract (Browser OCR); documents never leave the machine, and engine availability varies per machine.
 - Used on desktop browsers and mobile (responsive is required by the brief).
 
 ## Capabilities and Constraints

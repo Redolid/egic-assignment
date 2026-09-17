@@ -1,236 +1,294 @@
 ---
 name: EGIC Operations Toolkit
-description: An internal tool set like a German product data sheet — ruled, exact, and cross-referenced.
+description: Three daily tools laid out like a colour-coded plumbing run, soft, bright and exact.
 colors:
-  ink-950: "#0e0e0d"
-  ink-900: "#1a1a18"
-  ink-700: "#3f3f3b"
-  ink-600: "#55554f"
-  ink-500: "#6d6d69"
-  ink-400: "#9b9b97"
-  ink-300: "#c4c4c0"
-  ink-200: "#dcdcd9"
-  ink-100: "#ededeb"
-  ink-50: "#f6f6f5"
-  sheet-white: "#ffffff"
-  catalogue-cobalt: "#0047ab"
-  cobalt-deep: "#003b8e"
-  cobalt-wash: "#eef3fc"
-  cobalt-tint: "#dae5f7"
-  pass-green: "#17753a"
-  fail-red: "#c0141c"
-  caution-amber: "#a15c00"
+  supply-green: "#0f7f56"
+  supply-green-deep: "#0b6644"
+  supply-green-wash: "#e3f4ec"
+  cold-water-blue: "#2563d8"
+  cold-water-blue-deep: "#1d4faf"
+  cold-water-blue-wash: "#e6eefc"
+  hot-water-orange: "#c4410d"
+  hot-water-orange-deep: "#9e340a"
+  hot-water-orange-wash: "#fdede5"
+  pipe-steel: "#9fb2bd"
+  water-white: "#f4f8f9"
+  surface-white: "#ffffff"
+  rinse-grey: "#eaf1f3"
+  seam-line: "#dce6ea"
+  seam-line-strong: "#b7c7ce"
+  deep-ink: "#0f1c2b"
+  muted-ink: "#4a5b6b"
+  subtle-ink: "#5f6f7d"
+  pass: "#0f7f56"
+  warn: "#b45309"
+  fail: "#c62828"
+  duct-navy: "#0b1520"
+  duct-surface: "#111e2b"
+  duct-surface-2: "#172838"
+  duct-line: "#22364a"
+  duct-line-strong: "#34506a"
+  duct-fg: "#e8f0f5"
+  duct-fg-muted: "#a9bbcb"
+  duct-fg-subtle: "#8499ac"
+  glow-green: "#3ccb8f"
+  glow-blue: "#6ea2ff"
+  glow-orange: "#ff8a57"
+  duct-steel: "#3b556c"
+  on-glow: "#071522"
 typography:
-  sheet-title:
-    fontFamily: "Archivo Variable, IBM Plex Sans Arabic, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "3.25rem"
-    fontWeight: 800
-    lineHeight: 0.95
-    letterSpacing: "-0.01em"
-    fontVariation: "'wdth' 72"
-  section-title:
-    fontFamily: "Archivo Variable, ui-sans-serif, sans-serif"
-    fontSize: "1.25rem"
-    fontWeight: 800
-    lineHeight: 0.95
-    fontVariation: "'wdth' 72"
-  title:
-    fontFamily: "Archivo Variable, ui-sans-serif, sans-serif"
-    fontSize: "1.0625rem"
+  page-title:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "2.125rem"
     fontWeight: 600
-    lineHeight: 1.35
+    lineHeight: 1.25
+    letterSpacing: "-0.02em"
+  section-title:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 600
+    lineHeight: 1.5
+  brief:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.625
   body:
-    fontFamily: "Archivo Variable, ui-sans-serif, sans-serif"
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.5
-  spec-label:
-    fontFamily: "Archivo Variable, ui-sans-serif, sans-serif"
+  control:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.8125rem"
+    fontWeight: 500
+    lineHeight: 1.25
+  label:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 500
+    lineHeight: 1.33
+  tag:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.6875rem"
     fontWeight: 600
-    letterSpacing: "0.08em"
+    lineHeight: 1
+    fontFeature: "'tnum'"
+  micro:
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.625rem"
+    fontWeight: 500
+    lineHeight: 1.2
   figures:
-    fontFamily: "Archivo Variable, ui-sans-serif, sans-serif"
+    fontFamily: "Alexandria Variable, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 600
     fontFeature: "'tnum', 'lnum'"
-  arabic-data:
-    fontFamily: "IBM Plex Sans Arabic, Archivo Variable, sans-serif"
-    fontSize: "0.9375rem"
-    fontWeight: 600
 rounded:
-  none: "0px"
-  control: "3px"
-  balloon: "9999px"
+  fitting: "10px"
+  bend: "18px"
+  pill: "9999px"
 spacing:
-  cell-x: "12px"
-  cell-y: "8px"
-  section-gap: "32px"
-  gutter: "16px"
+  gutter-mobile: "16px"
+  gutter: "24px"
+  panel-mobile: "16px"
+  panel: "20px"
+  header: "28px"
+  section-gap: "24px"
 components:
   button-primary:
-    backgroundColor: "{colors.catalogue-cobalt}"
-    textColor: "{colors.sheet-white}"
-    rounded: "{rounded.control}"
-    height: "40px"
-    padding: "0 16px"
-  button-primary-hover:
-    backgroundColor: "{colors.cobalt-deep}"
-  button-secondary:
-    backgroundColor: "{colors.sheet-white}"
-    textColor: "{colors.ink-900}"
-    rounded: "{rounded.control}"
-    height: "32px"
-    padding: "0 12px"
-  button-secondary-hover:
-    backgroundColor: "{colors.ink-950}"
-    textColor: "{colors.sheet-white}"
-  input:
-    backgroundColor: "{colors.sheet-white}"
-    textColor: "{colors.ink-950}"
-    rounded: "{rounded.control}"
-    height: "40px"
-    padding: "0 12px"
-  register-tab-active:
-    backgroundColor: "{colors.ink-950}"
-    textColor: "{colors.sheet-white}"
-    rounded: "{rounded.none}"
+    backgroundColor: "{colors.supply-green}"
+    textColor: "{colors.surface-white}"
+    rounded: "{rounded.pill}"
+    padding: "0 20px"
     height: "44px"
-  balloon:
-    backgroundColor: "{colors.sheet-white}"
-    textColor: "{colors.ink-950}"
-    rounded: "{rounded.balloon}"
-    size: "24px"
-  balloon-selected:
-    backgroundColor: "{colors.catalogue-cobalt}"
-    textColor: "{colors.sheet-white}"
+  button-primary-hover:
+    backgroundColor: "{colors.supply-green-deep}"
+  button-secondary:
+    backgroundColor: "{colors.surface-white}"
+    textColor: "{colors.deep-ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "36px"
+  button-secondary-hover:
+    backgroundColor: "{colors.rinse-grey}"
+  button-ghost:
+    backgroundColor: "transparent"
+    textColor: "{colors.muted-ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "36px"
+  field:
+    backgroundColor: "{colors.surface-white}"
+    textColor: "{colors.deep-ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.fitting}"
+    padding: "0 14px"
+    height: "44px"
+  panel:
+    backgroundColor: "{colors.surface-white}"
+    rounded: "{rounded.bend}"
+    padding: "20px"
+  tag:
+    backgroundColor: "{colors.supply-green-wash}"
+    textColor: "{colors.supply-green-deep}"
+    typography: "{typography.tag}"
+    rounded: "{rounded.pill}"
+    height: "24px"
+  tag-active:
+    backgroundColor: "{colors.supply-green}"
+    textColor: "{colors.surface-white}"
+  stat-chip:
+    backgroundColor: "{colors.rinse-grey}"
+    textColor: "{colors.deep-ink}"
+    rounded: "{rounded.pill}"
+    padding: "6px 16px 6px 14px"
 ---
 
 # Design System: EGIC Operations Toolkit
 
 ## Overview
 
-**Creative North Star: "The Product Data Sheet"**
+**Creative North Star: "Pipe Colour Code"**
 
-Every screen is a sheet from a German industrial catalogue: a title block at the top, register tabs to move between sheets, hairline-ruled specification tables, and numbered balloons that cross-reference one thing to another — a field on an ID card to its row, a map pin to its trader. The tool exists for staff whose work is exact (money, national numbers), so the design's job is to make derivation visible: totals say what they sum, extracted values point at where they were read.
+EGIC makes water supply and drainage systems, and every installer knows pipes by colour. The toolkit uses that code: each tool runs on its own pipe colour, the header is a pipeline with a valve per tool, and work flows along pipes from where it comes in to where the result lands. Pricing runs on supply green, the National ID reader on cold-water blue, the traders map on hot-water orange. Picking a tool sends water down the header pipe to its valve, and the whole page picks up that colour.
 
-Density is welcome; decoration is not. Hierarchy comes from rule weight (2px ink for sections, 1px hairlines for rows), condensed capitals for sheet titles, and tabular figures — not from cards, shadows or colour fields. Colour is scarce and semantic: cobalt only where something can be acted on or is selected, and three stamp colours for verdicts.
+The feel is soft and modern: white panels with pipe-bend corners on a water-white canvas, pill-shaped controls like pipe segments, and flat drawings of each tool's pipe run. There is a light theme ("water-white") and a dark theme ("duct-navy") on one token set. The toggle floods the screen in the new theme from the button outward. Colour is warm and plentiful, but the data stays dense: tables keep tight rows, tabular figures and right-aligned money, because staff do exact, repetitive work.
 
-The world explicitly replaced a generic card-and-shadow SaaS dashboard look; that look is the anti-reference.
+This world replaced an earlier monochrome "DIN product data sheet" design. The user wanted more colour and warmth, a softer and more modern shape language, graphics, and both themes. From that design it kept the purposeful animations and the dense tables.
 
 **Key Characteristics:**
-- White sheet ground, ink-black section rules, hairline row rules.
-- Condensed uppercase Archivo for sheet and section titles; tabular figures for every number.
-- Numbered balloons as the cross-reference device.
-- Catalogue cobalt reserved for actions, selection and focus.
-- Arabic data typeset in IBM Plex Sans Arabic beside the English UI.
+- One accent per tool, from the pipe colour code, set on `<html data-tool>` and animated between tools.
+- Soft pipe-bend panels (18px), fittings (10px) for inputs and tiles, pills for buttons, chips and tags.
+- Flow as the recurring graphic: the pipeline nav, the ID page's connector, dashed water in the illustrations, progress bars that fill from the inlet.
+- Light and dark themes of equal standing, stored per browser, defaulting to the OS setting.
+- Dense, numeric-first tables inside the soft shell.
 
 ## Colors
 
-A restrained ink-on-white palette with one working accent and three inspection stamps.
+Three saturated pipe colours on cool, water-tinted neutrals. Every pipe colour has a deep variant for text and a wash for backgrounds.
 
 ### Primary
-- **Catalogue Cobalt** (#0047ab): primary buttons, links, focus rings, selected balloons, drop targets, the list selection band and the dimension bracket. Deepens to Cobalt Deep (#003b8e) on hover; Cobalt Wash (#eef3fc) and Cobalt Tint (#dae5f7) back selected or just-changed rows.
+- **Supply Green** (#0f7f56): the Cars & Products accent (primary buttons, the active valve, selection, flashes on changed totals). Deep variant (#0b6644) for text on washes and hover; wash (#e3f4ec) for icon circles and selected backgrounds.
+
+### Secondary
+- **Cold-Water Blue** (#2563d8): the National ID Reader accent: selected engine, located-field outlines, lit ID digits, the flowing connector and progress. Deep (#1d4faf), wash (#e6eefc).
+
+### Tertiary
+- **Hot-Water Orange** (#c4410d): the Traders Map accent: water-drop markers, the list's selection band, the popup's number tag. Deep (#9e340a), wash (#fdede5).
 
 ### Neutral
-- **Sheet White** (#ffffff): the page and every panel. There is no grey desk behind the sheet.
-- **Printer's Ink** (#0e0e0d): sheet titles, 2px section rules, the active register tab, outlined controls.
-- **Body Ink** (#1a1a18): body text and values.
-- **Secondary Ink** (#55554f): descriptions, spec labels, metadata (AA on white).
-- **Hairline** (#dcdcd9): row rules and cell dividers.
-- **Paper Tint** (#f6f6f5): the add-line form strip and hover rows.
+- **Water White** (#f4f8f9): the page canvas.
+- **Surface White** (#ffffff): panels, inputs, popups.
+- **Rinse Grey** (#eaf1f3): hover rows, the add-line tray, stat chips, empty pipe interiors.
+- **Seam Line** (#dce6ea) / **Seam Line Strong** (#b7c7ce): panel borders and table rules; stronger for totals rows and hovered borders.
+- **Deep Ink** (#0f1c2b): text. **Muted Ink** (#4a5b6b): briefs and labels. **Subtle Ink** (#5f6f7d): placeholders, hints, grips.
+- **Pipe Steel** (#9fb2bd): unfilled pipe in the nav and connectors.
+- **Status**: pass (#0f7f56), warn (#b45309), fail (#c62828), each with a soft wash for pill badges.
 
-### Stamps
-- **Pass Green** (#17753a), **Fail Red** (#c0141c), **Caution Amber** (#a15c00): check verdict stamps, validation messages and warning panels only, each on its own 50-level wash.
+### Dark theme (duct navy)
+The same roles, mirrored: canvas #0b1520, surfaces #111e2b / #172838, lines #22364a / #34506a, text #e8f0f5 / #a9bbcb / #8499ac. The pipe colours are brightened to glow on navy (green #3ccb8f, blue #6ea2ff, orange #ff8a57); their washes become 14–16% alpha tints; text on a solid pipe colour switches to #071522.
 
 ### Named Rules
-**The Cobalt Means Act Rule.** Cobalt appears only on something clickable, selected, focused or receiving a drop. A cobalt element that does nothing is a defect.
+**The One Pipe Rule.** A page uses only its own tool's pipe colour as accent. The other two pipe colours appear only in the header valves.
 
-**The Stamp Rule.** Green, red and amber are verdicts. They never decorate, and never appear without the words that explain them.
+**The Contrast Floor Rule.** Every text pair clears 4.5:1 in both themes. Deep variants exist to put pipe-coloured text on washes, not for decoration.
 
 ## Typography
 
-**Display Font:** Archivo Variable, width axis at 72% (with IBM Plex Sans Arabic, system-ui)
-**Body Font:** Archivo Variable at normal width
-**Arabic Data Font:** IBM Plex Sans Arabic
+**Display, body and figures:** Alexandria (variable, self-hosted), with system sans as fallback.
 
-**Character:** An industrial grotesk that condenses into catalogue headings and relaxes into readable table text from one file; the Arabic companion carries names and addresses with equal weight.
+**Character:** Alexandria is one geometric family that covers Latin and Arabic, including Arabic-Indic digits, and has tabular figures. Trader names, ID fields and English UI therefore share one voice without a second font file.
 
 ### Hierarchy
-- **Sheet title** (800, 2.5rem mobile / 3.25rem desktop, 0.95, uppercase, condensed): one per page, top-left.
-- **Section title** (800, 1.25rem, uppercase, condensed): "Parts list", "Source document", "Trader register", always sitting on a 2px ink rule.
-- **Title** (600, 1.0625rem): vehicle names and other row headers.
-- **Body** (400, 0.875–0.9375rem, 1.5): descriptions capped at 62ch.
-- **Spec label** (600, 0.6875rem, 0.08em tracking, uppercase, Secondary Ink): column heads, cell labels, form labels.
-- **Figures** (tabular, lining): every quantity, price, total, ID digit and coordinate.
+- **Page title** (600, 1.75rem → 2.125rem from `sm`, 1.25, −0.02em): the one h1 per tool, in the page header.
+- **Section title** (600, 1rem): panel headings, paired with an icon in an accent-wash circle.
+- **Brief** (400, 0.9375rem, 1.625, max 62ch): the page description.
+- **Body** (400, 0.875rem): table cells, inputs, list rows. Arabic names use 0.9375rem semibold, right-to-left.
+- **Control** (500, 0.8125rem): small buttons and nav labels.
+- **Label** (500, 0.75rem, muted): field labels, column heads, stat-chip labels. Sentence case, no tracking.
+- **Tag** (600, 0.6875rem, tabular): numbered tags.
+- **Micro** (500, 0.625rem): captions under the dimensioned ID digits only. The map attribution uses 10px.
 
 ### Named Rules
-**The Tabular Figures Rule.** Any number a person might compare down a column uses tabular lining figures.
-
-**The Condensed Is For Titles Rule.** Condensed capitals name sheets and sections only; values and controls stay at normal width.
+**The Tabular Money Rule.** Money, quantities, IDs and coordinates always use tabular lining figures and right alignment, so columns can be compared by eye.
 
 ## Layout
 
-Content sits in a centred sheet up to 84rem wide with a 16px mobile / 24px desktop gutter. Every page opens with the same heading block: sheet title and brief on the left, a bordered row of spec cells on the right, closed by a hairline. Below it, two-column working layouts appear at large sizes (parts list 17rem + vehicles; trader register 23rem + map; source document + extracted data at 1280px+) and stack into one column on phones, map first. Tables keep their semantics on desktop and restyle rows into stacked label/value entries below 640px, never scrolling sideways. Sections are separated by 2px ink rules and 32px of space; rows by 1px hairlines.
+- **Container:** a centred 84rem container. Side gutters are 16px, and 24px from `sm`.
+- **Header:** sticky and blurred over the canvas. On desktop it is a three-column grid (brand · pipeline, max 34rem · theme toggle). Below `lg` the pipeline drops to a full-width second row, and below `md` it shows the short tool names (Pricing, ID check, Traders).
+- **Page header:** every tool opens with the same panel. Title, brief and stat chips sit on the left, the tool's illustration on the right over an accent wash. On mobile the illustration moves above the title.
+- **Cars & Products:** a 17rem sticky parts list beside the vehicle stack (from `lg`). On mobile the parts list becomes a horizontal snap strip.
+- **National ID Reader:** source and result panels side by side from `xl`, joined by a 3.5rem flow connector. Below `xl` they stack and the connector turns vertical.
+- **Traders Map:** a 23rem trader list beside the map, both filling the viewport height from `lg`. On mobile the map comes first at 58vh and the list follows.
+- **Rhythm:** 24px between page sections and 12px between vehicle panels. Panel padding is 16px, or 20px from `sm`; the page header uses 20px, or 28px from `sm`.
 
 ## Elevation & Depth
 
-Flat by default. Depth is carried by rule weight and the black active tab, not shadows. Soft shadows appear only on things physically lifted off the sheet: the drag ghost, the confirmation toast, map popups and pin balloons.
+The design is layered but soft. Panels sit a hair above the canvas on a border plus a two-part ambient shadow. Only moving or floating elements get the lifted shadow. The shadow colour is a token (`--shadow-color`), so dark mode gets deeper, bluer shadows rather than grey haze.
 
 ### Shadow Vocabulary
-- **Lifted slip** (`box-shadow: 0 16px 28px -14px rgb(14 14 13 / 0.45)`): the drag ghost while carried.
-- **Toast** (`box-shadow: 0 14px 30px -12px rgb(14 14 13 / 0.6)`): the confirmation strip.
-- **Popup** (`box-shadow: 0 14px 28px -16px rgb(14 14 13 / 0.45)`): map popups.
+- **Panel** (`box-shadow: 0 1px 2px hsl(212 40% 12% / 0.06), 0 10px 28px -14px hsl(212 40% 12% / 0.18)`): panels, primary and secondary buttons, the theme toggle, the active valve.
+- **Lifted** (`box-shadow: 0 18px 36px -16px hsl(212 40% 12% / 0.35)`): drag previews, map popups, the floating "Show all" control, toasts.
 
 ### Named Rules
-**The Flat Sheet Rule.** Nothing resting on the sheet casts a shadow; only objects being moved or floating above it do.
+**The Lift Means Movement Rule.** The lifted shadow marks only things that float or move (a dragged part, a popup, a toast). Static content never gets it.
 
 ## Shapes
 
-Square by conviction: panels, tabs, tables, cell grids, alerts and map controls have no radius. Form controls and buttons take a barely-there 3px corner. The only round forms are balloons and status dots, and they are always perfect circles with a 1.5px outline.
+- **Pipe bend** (18px): panels, the page header, the dropzone, popups.
+- **Fitting** (10px): inputs, engine tiles, list rows, the selection band, ID digit segments.
+- **Pill** (9999px): buttons, stat chips, tags, status badges, pipes, progress bars and the toast.
+- **Icon circles:** the section icon, vehicle icon, empty-state icon and theme toggle are all full circles.
+- **Illustrations:** flat SVG with 3–4px round-capped strokes in theme tokens, and dashed "water" moving along the pipes (static under reduced motion).
 
 ## Components
 
 ### Buttons
-- **Shape:** near-square (3px).
-- **Primary:** Catalogue Cobalt fill, white label, 40px tall; one per section at most ("Add line").
-- **Secondary:** white with a 1px ink outline that fills solid ink on hover ("Reset demo data", "Try a sample card", "Show all").
-- **Feedback:** presses scale to 98%; a successful add turns the button Pass Green with a plus-to-check morph for a moment.
+- **Shape:** pill (9999px), 36px (small) or 44px (default) tall.
+- **Primary:** solid tool accent with on-accent text and the panel shadow. Hover deepens to the accent's deep variant; press scales to 0.97.
+- **Secondary:** a white surface with a seam-line border; hover strengthens the border and fills rinse grey.
+- **Ghost / Danger:** text only. Danger hovers to a fail wash with fail-red text (row delete).
+- **Focus:** a 2px accent outline, offset 2px.
 
 ### Inputs / Fields
-- **Style:** white, 1px Hairline-to-ink border, 3px corner, spec label above.
-- **Inline table cells:** borderless-looking until hover/focus, right-aligned tabular figures; prices display with two decimals when not being typed.
-- **Focus:** cobalt border with a 3px cobalt ring at 15%.
-- **Error:** Fail Red border, a triangle warning icon and message that unfolds beneath; rejected submits shake only the invalid fields.
+- **Style:** a 44px fitting (10px radius) on a white surface with a seam-line border and a muted label above.
+- **Focus:** the border turns accent, with a 4px accent-wash ring.
+- **Error:** a fail-red border and wash ring; the message reveals downward with a circled "!" icon. Inline number cells revert on blur if invalid.
 
-### Navigation — Register tabs
-- Tabs sit on a 2px ink baseline like a catalogue's thumb index: a numbered balloon plus the tool name (short names below 1024px). The active tab is solid Printer's Ink with white text and slides to the new tab during page transitions; inactive tabs tint Paper on hover.
+### Stat chips
+Pills on rinse grey: a muted label followed by a tabular figure. They are the page header's summary (vehicles, lines, grand total; engine, sides, checks; locations, selected).
 
-### Spec cells
-- A bordered row of label-over-value cells divided by hairlines, used in every sheet header for counts, totals, engine and verdicts.
+### Cards / Containers (panels)
+- **Corner style:** pipe bend (18px), a white surface, a seam-line border, the panel shadow.
+- **Headers:** a section title with an icon circle and optional metadata on the right. A hairline separates the header from the body in list-style panels.
+- **Drop target:** a dashed accent border while a drag is active; on hover it scales to 1.01 with an accent border and a 4px wash ring.
 
-### Numbered balloon (signature)
-- A 24px circle with a 1.5px outline and a tabular number, used wherever one thing refers to another: ID fields on the card image ↔ rows in the fields table; map pins ↔ trader register rows; register tabs. Hovering either end fills both in cobalt. Balloons never number things that reference nothing.
+### Navigation (signature): the pipeline
+Three valves (40px circles) sit on one steel pipe. Water, the accent colour with a moving highlight, fills the pipe from the first valve to the active one. The active valve fills with its own pipe colour and scales to 1.1. Inactive valves take their pipe colour on hover. Changing tools runs a View Transition: the page leaves and enters from the chosen valve's side while the water runs.
 
-### Inspection stamp
-- An outlined uppercase verdict (PASS / CHECK / FAIL) in its stamp colour that presses in when a verdict changes, beside the check's name and detail.
+### Numbered tag
+A 24px pill carrying a number that links one value to the same value elsewhere (ID field ↔ located text, trader row ↔ map marker). At rest it is an accent wash with deep text. When active it is solid accent with on-accent text and a 3px wash halo.
 
-### Dimension bracket
-- Inspecting a total draws a cobalt line down the subtotal column it sums; the ID number splits into dimensioned segments (century · YYMMDD · governorate · sequence · check) with ticks and captions.
+### Water-drop marker
+A 30×40 map pin shaped like a drop in hot-water orange, with a surface-coloured inner circle carrying the trader number. Hover lifts it 3px and scales it to 1.1. Selection scales it to 1.25, deepens its colour and pings a ground ring twice.
+
+### Flow connector
+A pipe between the ID page's source and result panels. It is empty while idle, fills with flowing water while the model reads, and stays full once a result exists.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** open every sheet with the title block: condensed sheet title, brief, spec cells.
-- **Do** separate sections with a 2px Printer's Ink rule and rows with 1px Hairlines.
-- **Do** use a numbered balloon whenever a value on one surface refers to a value on another, and make hover highlight both ends.
-- **Do** set every number in tabular figures and right-align numeric columns.
-- **Do** typeset Arabic names, addresses and professions right-to-left in IBM Plex Sans Arabic.
-- **Do** keep motion to state changes: sheets slide in the direction of their tab, sections unfold by height, totals count to their new value, stamps press in; every one has a reduced-motion fallback.
+- **Do** take the accent from `--accent` (set by `data-tool`), never a hard-coded pipe colour, inside a tool page.
+- **Do** read colours in scripts (WAAPI flashes, outlines) from computed CSS variables, so both themes animate correctly.
+- **Do** use tabular figures and right alignment for every number column.
+- **Do** keep panel radius 18px, field radius 10px and controls pill-shaped.
+- **Do** give every animation a reduced-motion path (instant or a short crossfade).
+- **Do** scope Leaflet overrides under `.leaflet-container`, because Leaflet's stylesheet loads after the app's.
 
 ### Don't:
-- **Don't** put content in rounded, shadowed cards; use ruled sections on the sheet.
-- **Don't** use cobalt on anything that isn't actionable, selected or focused.
-- **Don't** number sections or items that nothing cross-references.
-- **Don't** add colour fields, gradients or tinted backgrounds for emphasis; use rule weight, condensed titles and figures.
-- **Don't** use Unicode glyphs or emoji as icons; icons are 2px-stroke SVGs.
+- **Don't** return to the monochrome, square, ruled "data sheet" look the user moved away from.
+- **Don't** use a second tool's pipe colour as an accent on another tool's page.
+- **Don't** loosen table density (row height, figure size) for softness; the softness lives in the shell.
+- **Don't** put the lifted shadow on static content.
+- **Don't** add a second typeface; Alexandria covers Latin, Arabic and figures.

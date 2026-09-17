@@ -1,37 +1,634 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-15T20:00:00Z",
+  "generatedAt": "2026-09-17T17:27:23.945Z",
   "title": "Design System: EGIC Operations Toolkit",
   "extensions": {
     "colorMeta": {
-      "catalogue-cobalt": { "role": "primary", "displayName": "Catalogue Cobalt", "canonical": "#0047ab", "tonalRamp": ["#002f70", "#003b8e", "#0047ab", "#1d5bc6", "#7fa3e0", "#b3c9ee", "#dae5f7", "#eef3fc"] },
-      "ink-950": { "role": "neutral", "displayName": "Printer's Ink", "canonical": "#0e0e0d", "tonalRamp": ["#0e0e0d", "#2a2a27", "#3f3f3b", "#55554f", "#6d6d69", "#9b9b97", "#dcdcd9", "#f6f6f5"] },
-      "sheet-white": { "role": "neutral", "displayName": "Sheet White", "canonical": "#ffffff" },
-      "pass-green": { "role": "tertiary", "displayName": "Pass Green", "canonical": "#17753a" },
-      "fail-red": { "role": "tertiary", "displayName": "Fail Red", "canonical": "#c0141c" },
-      "caution-amber": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "#a15c00" }
+      "supply-green": {
+        "role": "primary",
+        "displayName": "Supply Green",
+        "canonical": "oklch(52.9% 0.113 161.4)",
+        "tonalRamp": [
+          "#001006",
+          "#002f1d",
+          "#005336",
+          "#007951",
+          "#3c9e73",
+          "#65c497",
+          "#89e8b9",
+          "#c2ffdf"
+        ]
+      },
+      "supply-green-deep": {
+        "role": "primary",
+        "displayName": "Supply Green Deep",
+        "canonical": "oklch(45.2% 0.097 161.1)",
+        "tonalRamp": [
+          "#001006",
+          "#002f1c",
+          "#005335",
+          "#257754",
+          "#4d9b76",
+          "#73c19a",
+          "#96e5bd",
+          "#c3ffde"
+        ]
+      },
+      "supply-green-wash": {
+        "role": "primary",
+        "displayName": "Supply Green Wash",
+        "canonical": "oklch(95.2% 0.021 166.1)",
+        "tonalRamp": [
+          "#040e09",
+          "#1d2a24",
+          "#3b4942",
+          "#5b6a63",
+          "#7e8d86",
+          "#a2b2ab",
+          "#c5d6ce",
+          "#e2f3eb"
+        ]
+      },
+      "cold-water-blue": {
+        "role": "secondary",
+        "displayName": "Cold-Water Blue",
+        "canonical": "oklch(53.1% 0.191 261.6)",
+        "tonalRamp": [
+          "#000038",
+          "#001e63",
+          "#0039a1",
+          "#1f5cd1",
+          "#4383fa",
+          "#81adfe",
+          "#b9d2fe",
+          "#e6effe"
+        ]
+      },
+      "cold-water-blue-deep": {
+        "role": "secondary",
+        "displayName": "Cold-Water Blue Deep",
+        "canonical": "oklch(45.4% 0.163 261.7)",
+        "tonalRamp": [
+          "#000038",
+          "#001d64",
+          "#093b9a",
+          "#2d60c2",
+          "#4f85ea",
+          "#81adfe",
+          "#b8d2ff",
+          "#e6effe"
+        ]
+      },
+      "cold-water-blue-wash": {
+        "role": "secondary",
+        "displayName": "Cold-Water Blue Wash",
+        "canonical": "oklch(94.7% 0.021 261.8)",
+        "tonalRamp": [
+          "#070b14",
+          "#212731",
+          "#3f4550",
+          "#606672",
+          "#828996",
+          "#a7aebc",
+          "#cad1df",
+          "#e7effd"
+        ]
+      },
+      "hot-water-orange": {
+        "role": "tertiary",
+        "displayName": "Hot-Water Orange",
+        "canonical": "oklch(55.7% 0.176 38.1)",
+        "tonalRamp": [
+          "#1e0100",
+          "#481000",
+          "#7a2200",
+          "#b03602",
+          "#de592d",
+          "#ff8862",
+          "#ffc0ac",
+          "#ffe9e2"
+        ]
+      },
+      "hot-water-orange-deep": {
+        "role": "tertiary",
+        "displayName": "Hot-Water Orange Deep",
+        "canonical": "oklch(47.6% 0.148 38.3)",
+        "tonalRamp": [
+          "#1e0100",
+          "#491000",
+          "#7a2300",
+          "#a93f19",
+          "#d26440",
+          "#fc8965",
+          "#fec0ad",
+          "#fee9e3"
+        ]
+      },
+      "hot-water-orange-wash": {
+        "role": "tertiary",
+        "displayName": "Hot-Water Orange Wash",
+        "canonical": "oklch(95.7% 0.020 48.5)",
+        "tonalRamp": [
+          "#120905",
+          "#2f241e",
+          "#4f423c",
+          "#70635c",
+          "#94867f",
+          "#b9aaa3",
+          "#ddcdc6",
+          "#fbebe3"
+        ]
+      },
+      "pipe-steel": {
+        "role": "neutral",
+        "displayName": "Pipe Steel",
+        "canonical": "oklch(75.2% 0.026 233.1)",
+        "tonalRamp": [
+          "#010d14",
+          "#192931",
+          "#374851",
+          "#586973",
+          "#7a8c97",
+          "#9eb1bc",
+          "#c1d4e0",
+          "#def2fe"
+        ]
+      },
+      "water-white": {
+        "role": "neutral",
+        "displayName": "Water White",
+        "canonical": "oklch(97.6% 0.004 214.3)",
+        "tonalRamp": [
+          "#090c0c",
+          "#242728",
+          "#424646",
+          "#636768",
+          "#868a8b",
+          "#abafb0",
+          "#ced2d3",
+          "#ebeff0"
+        ]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "rinse-grey": {
+        "role": "neutral",
+        "displayName": "Rinse Grey",
+        "canonical": "oklch(95.3% 0.008 216.6)",
+        "tonalRamp": [
+          "#080c0d",
+          "#222729",
+          "#404648",
+          "#616769",
+          "#848a8c",
+          "#a9afb1",
+          "#cbd2d4",
+          "#e9f0f2"
+        ]
+      },
+      "seam-line": {
+        "role": "neutral",
+        "displayName": "Seam Line",
+        "canonical": "oklch(91.9% 0.012 223.5)",
+        "tonalRamp": [
+          "#060c0f",
+          "#20282b",
+          "#3e474a",
+          "#5f686b",
+          "#828b8f",
+          "#a6b0b4",
+          "#c9d3d7",
+          "#e6f0f4"
+        ]
+      },
+      "seam-line-strong": {
+        "role": "neutral",
+        "displayName": "Seam Line Strong",
+        "canonical": "oklch(82.0% 0.020 225.8)",
+        "tonalRamp": [
+          "#030d12",
+          "#1c292e",
+          "#3a474d",
+          "#5a696f",
+          "#7d8c93",
+          "#a1b1b8",
+          "#c4d4db",
+          "#e1f2f9"
+        ]
+      },
+      "deep-ink": {
+        "role": "neutral",
+        "displayName": "Deep Ink",
+        "canonical": "oklch(22.3% 0.035 252.8)",
+        "tonalRamp": [
+          "#020c19",
+          "#1a2737",
+          "#384658",
+          "#58687a",
+          "#7b8b9e",
+          "#9fb0c4",
+          "#c1d3e8",
+          "#e4f0fe"
+        ]
+      },
+      "muted-ink": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "oklch(46.3% 0.034 247.0)",
+        "tonalRamp": [
+          "#010c18",
+          "#192836",
+          "#374756",
+          "#576879",
+          "#798c9d",
+          "#9eb0c3",
+          "#c0d4e6",
+          "#e2f0fe"
+        ]
+      },
+      "subtle-ink": {
+        "role": "neutral",
+        "displayName": "Subtle Ink",
+        "canonical": "oklch(53.4% 0.029 244.8)",
+        "tonalRamp": [
+          "#020c17",
+          "#1a2834",
+          "#384754",
+          "#586876",
+          "#7b8b9a",
+          "#9fb0c0",
+          "#c2d4e3",
+          "#e1f1ff"
+        ]
+      },
+      "pass": {
+        "role": "status",
+        "displayName": "Pass",
+        "canonical": "oklch(52.9% 0.113 161.4)",
+        "tonalRamp": [
+          "#001006",
+          "#002f1d",
+          "#005336",
+          "#007951",
+          "#3c9e73",
+          "#65c497",
+          "#89e8b9",
+          "#c2ffdf"
+        ]
+      },
+      "warn": {
+        "role": "status",
+        "displayName": "Warn",
+        "canonical": "oklch(55.5% 0.146 49.0)",
+        "tonalRamp": [
+          "#1b0400",
+          "#421900",
+          "#702f00",
+          "#a24800",
+          "#cd6a2c",
+          "#f78f54",
+          "#ffc1a1",
+          "#ffeadf"
+        ]
+      },
+      "fail": {
+        "role": "status",
+        "displayName": "Fail",
+        "canonical": "oklch(53.9% 0.194 26.7)",
+        "tonalRamp": [
+          "#210000",
+          "#500003",
+          "#86000a",
+          "#bc1a1f",
+          "#e74b44",
+          "#ff857a",
+          "#febfb7",
+          "#fee9e6"
+        ]
+      },
+      "duct-navy": {
+        "role": "neutral",
+        "displayName": "Duct Navy (dark canvas)",
+        "canonical": "oklch(19.2% 0.027 251.6)",
+        "tonalRamp": [
+          "#040c16",
+          "#1d2733",
+          "#3b4653",
+          "#5b6775",
+          "#7e8b99",
+          "#a2b0bf",
+          "#c5d3e3",
+          "#e4f0fe"
+        ]
+      },
+      "duct-surface": {
+        "role": "neutral",
+        "displayName": "Duct Surface (dark)",
+        "canonical": "oklch(23.0% 0.031 249.3)",
+        "tonalRamp": [
+          "#020c18",
+          "#1a2835",
+          "#384755",
+          "#596878",
+          "#7b8b9c",
+          "#9fb0c1",
+          "#c2d3e5",
+          "#e3f0fe"
+        ]
+      },
+      "duct-surface-2": {
+        "role": "neutral",
+        "displayName": "Duct Surface Raised (dark)",
+        "canonical": "oklch(27.0% 0.038 247.9)",
+        "tonalRamp": [
+          "#010c1a",
+          "#172838",
+          "#354758",
+          "#55687b",
+          "#788c9f",
+          "#9cb1c5",
+          "#bed4e9",
+          "#e3f0fe"
+        ]
+      },
+      "duct-line": {
+        "role": "neutral",
+        "displayName": "Duct Seam (dark)",
+        "canonical": "oklch(32.5% 0.044 249.3)",
+        "tonalRamp": [
+          "#000c1d",
+          "#14283b",
+          "#32475c",
+          "#53687f",
+          "#758ca3",
+          "#99b1c9",
+          "#bcd4ed",
+          "#e3f0ff"
+        ]
+      },
+      "duct-line-strong": {
+        "role": "neutral",
+        "displayName": "Duct Seam Strong (dark)",
+        "canonical": "oklch(42.1% 0.055 247.5)",
+        "tonalRamp": [
+          "#000c1e",
+          "#0d2840",
+          "#2c4861",
+          "#4c6984",
+          "#6f8da9",
+          "#93b2d0",
+          "#b5d5f4",
+          "#e2f1ff"
+        ]
+      },
+      "duct-fg": {
+        "role": "neutral",
+        "displayName": "Duct Text (dark)",
+        "canonical": "oklch(95.1% 0.011 234.8)",
+        "tonalRamp": [
+          "#070c0f",
+          "#21272b",
+          "#40464a",
+          "#60676b",
+          "#838a8f",
+          "#a8afb4",
+          "#cad2d7",
+          "#e8f0f5"
+        ]
+      },
+      "duct-fg-muted": {
+        "role": "neutral",
+        "displayName": "Duct Muted Text (dark)",
+        "canonical": "oklch(78.3% 0.030 245.0)",
+        "tonalRamp": [
+          "#020c17",
+          "#1a2834",
+          "#384754",
+          "#586877",
+          "#7a8c9b",
+          "#9fb0c0",
+          "#c1d4e4",
+          "#e2f1fe"
+        ]
+      },
+      "duct-fg-subtle": {
+        "role": "neutral",
+        "displayName": "Duct Subtle Text (dark)",
+        "canonical": "oklch(67.3% 0.037 245.7)",
+        "tonalRamp": [
+          "#000c1a",
+          "#172837",
+          "#354758",
+          "#55697a",
+          "#778c9f",
+          "#9bb1c4",
+          "#bed4e8",
+          "#e1f1ff"
+        ]
+      },
+      "glow-green": {
+        "role": "primary",
+        "displayName": "Glow Green (dark accent)",
+        "canonical": "oklch(75.2% 0.149 160.9)",
+        "tonalRamp": [
+          "#001006",
+          "#002f1c",
+          "#005335",
+          "#037950",
+          "#08a26d",
+          "#3bca8e",
+          "#67efb1",
+          "#c3ffde"
+        ]
+      },
+      "glow-blue": {
+        "role": "secondary",
+        "displayName": "Glow Blue (dark accent)",
+        "canonical": "oklch(71.7% 0.147 261.3)",
+        "tonalRamp": [
+          "#000039",
+          "#001f61",
+          "#103e92",
+          "#3262b9",
+          "#5487e1",
+          "#80aefe",
+          "#b9d2fe",
+          "#e6efff"
+        ]
+      },
+      "glow-orange": {
+        "role": "tertiary",
+        "displayName": "Glow Orange (dark accent)",
+        "canonical": "oklch(75.3% 0.157 43.4)",
+        "tonalRamp": [
+          "#1c0200",
+          "#451500",
+          "#752a00",
+          "#a94000",
+          "#d4632f",
+          "#fe8956",
+          "#fec1a8",
+          "#ffe9e1"
+        ]
+      },
+      "duct-steel": {
+        "role": "neutral",
+        "displayName": "Duct Steel (dark pipe)",
+        "canonical": "oklch(43.8% 0.049 245.9)",
+        "tonalRamp": [
+          "#000c1d",
+          "#0f283d",
+          "#2e485e",
+          "#4f6981",
+          "#718da6",
+          "#95b2cc",
+          "#b7d5f0",
+          "#e1f1ff"
+        ]
+      },
+      "on-glow": {
+        "role": "neutral",
+        "displayName": "On Glow (text on dark accents)",
+        "canonical": "oklch(19.0% 0.033 247.8)",
+        "tonalRamp": [
+          "#020c18",
+          "#192836",
+          "#374756",
+          "#576879",
+          "#7a8b9d",
+          "#9eb0c2",
+          "#c0d4e6",
+          "#e3f0fe"
+        ]
+      }
     },
     "typographyMeta": {
-      "sheet-title": { "displayName": "Sheet title", "purpose": "One per page; condensed uppercase catalogue heading." },
-      "section-title": { "displayName": "Section title", "purpose": "Section headings sitting on a 2px ink rule." },
-      "spec-label": { "displayName": "Spec label", "purpose": "Column heads, cell labels, form labels." },
-      "figures": { "displayName": "Figures", "purpose": "Every number compared down a column." },
-      "arabic-data": { "displayName": "Arabic data", "purpose": "Names, addresses, trader names, professions." }
+      "page-title": {
+        "displayName": "Page title",
+        "purpose": "The one h1 per tool, in the page header; 1.75rem on mobile."
+      },
+      "section-title": {
+        "displayName": "Section title",
+        "purpose": "Panel headings beside an icon circle."
+      },
+      "brief": {
+        "displayName": "Brief",
+        "purpose": "Page descriptions, max 62ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Table cells, inputs, list rows."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Small buttons and nav labels."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, column heads, stat-chip labels. Sentence case."
+      },
+      "tag": {
+        "displayName": "Tag",
+        "purpose": "Numbers inside numbered tags."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Captions under dimensioned ID digits only."
+      },
+      "figures": {
+        "displayName": "Figures",
+        "purpose": "Money, quantities, IDs and coordinates; always tabular."
+      }
     },
     "shadows": [
-      { "name": "lifted-slip", "value": "0 16px 28px -14px rgb(14 14 13 / 0.45)", "purpose": "Drag ghost while carried." },
-      { "name": "toast", "value": "0 14px 30px -12px rgb(14 14 13 / 0.6)", "purpose": "Confirmation toast." },
-      { "name": "popup", "value": "0 14px 28px -16px rgb(14 14 13 / 0.45)", "purpose": "Map popups." }
+      {
+        "name": "panel",
+        "value": "0 1px 2px hsl(var(--shadow-color) / 0.06), 0 10px 28px -14px hsl(var(--shadow-color) / 0.18)",
+        "purpose": "Panels, primary/secondary buttons, the theme toggle, the active valve."
+      },
+      {
+        "name": "lifted",
+        "value": "0 18px 36px -16px hsl(var(--shadow-color) / 0.35)",
+        "purpose": "Only things that float or move: drag previews, popups, the floating map control, toasts."
+      },
+      {
+        "name": "shadow-color",
+        "value": "light 212 40% 12% · dark 212 60% 3%",
+        "purpose": "Themed shadow hue so dark shadows stay deep and blue."
+      }
     ],
     "motion": [
-      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Arrivals: unfolds, sheet entry, counters, pin selection." },
-      { "name": "ease-in", "value": "cubic-bezier(0.55, 0, 1, 0.45)", "purpose": "Exits: collapses, sheet leave, row removal." },
-      { "name": "sheet-transition", "value": "160ms leave / 320ms enter, 24–36px travel in tab direction", "purpose": "View transitions between tools." }
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Arrivals, state changes, the accent glide between tools (450ms)."
+      },
+      {
+        "name": "ease-in",
+        "value": "cubic-bezier(0.55, 0, 1, 0.45)",
+        "purpose": "Departures (page leave, 160ms)."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "purpose": "Loops and the theme flood (560ms)."
+      },
+      {
+        "name": "page-transition",
+        "value": "leave 160ms / enter 340ms, ±24–36px along the pipeline direction",
+        "purpose": "View Transition between tools."
+      },
+      {
+        "name": "theme-fill",
+        "value": "clip-path circle from the toggle, 560ms",
+        "purpose": "The new theme floods the screen from the toggle; crossfade under reduced motion."
+      },
+      {
+        "name": "flow",
+        "value": "900ms linear infinite",
+        "purpose": "Water highlight moving along pipes (nav, connector, progress)."
+      },
+      {
+        "name": "draw-in",
+        "value": "520ms ease-out",
+        "purpose": "Confidence bars filling from their inlet."
+      },
+      {
+        "name": "reveal-down",
+        "value": "260ms ease-out",
+        "purpose": "Validation messages and expanding content."
+      }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
     ]
   },
   "components": [
@@ -39,81 +636,105 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The one action a section exists for.",
-      "html": "<button class=\"ds-btn-primary\">Add line</button>",
-      "css": ".ds-btn-primary{height:40px;padding:0 16px;border:0;border-radius:3px;background:#0047ab;color:#fff;font:600 14px/1 'Archivo Variable',sans-serif;transition:background-color .15s,scale .15s}.ds-btn-primary:hover{background:#003b8e}.ds-btn-primary:active{scale:.98}.ds-btn-primary:focus-visible{outline:2px solid #0047ab;outline-offset:2px}"
+      "description": "The main action on a panel, in the current tool colour.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M8 3v10M3 8h10\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>Add line</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; background: var(--accent, #0f7f56); color: var(--on-accent, #fff); font: 500 14px/1 'Alexandria Variable', system-ui, sans-serif; box-shadow: 0 1px 2px hsl(212 40% 12% / 0.06), 0 10px 28px -14px hsl(212 40% 12% / 0.18); cursor: pointer; transition: background-color 200ms, scale 200ms; } .ds-btn-primary:hover { background: var(--accent-strong, #0b6644); } .ds-btn-primary:active { scale: 0.97; } .ds-btn-primary:focus-visible { outline: 2px solid var(--accent, #0f7f56); outline-offset: 2px; }"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Outlined ink control that fills solid on hover.",
-      "html": "<button class=\"ds-btn-secondary\">Reset demo data</button>",
-      "css": ".ds-btn-secondary{height:32px;padding:0 12px;border:0;border-radius:3px;background:#fff;color:#1a1a18;box-shadow:inset 0 0 0 1px #0e0e0d;font:600 13px/1 'Archivo Variable',sans-serif;transition:background-color .15s,color .15s}.ds-btn-secondary:hover{background:#0e0e0d;color:#fff}.ds-btn-secondary:focus-visible{outline:2px solid #0047ab;outline-offset:2px}"
+      "description": "Supporting actions such as \"Try a sample card\".",
+      "html": "<button class=\"ds-btn-secondary\">Try a sample card</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border: 1px solid var(--line, #dce6ea); border-radius: 9999px; background: var(--surface, #fff); color: var(--fg, #0f1c2b); font: 500 13px/1 'Alexandria Variable', system-ui, sans-serif; box-shadow: 0 1px 2px hsl(212 40% 12% / 0.06), 0 10px 28px -14px hsl(212 40% 12% / 0.18); cursor: pointer; transition: background-color 200ms, border-color 200ms; } .ds-btn-secondary:hover { border-color: var(--line-strong, #b7c7ce); background: var(--surface-2, #eaf1f3); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--accent, #0f7f56); outline-offset: 2px; }"
     },
     {
       "name": "Field",
       "kind": "input",
-      "refersTo": "input",
-      "description": "Spec label over a near-square input.",
-      "html": "<label class=\"ds-field\"><span>Unit price, EGP</span><input value=\"1250.00\"></label>",
-      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font-family:'Archivo Variable',sans-serif}.ds-field span{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#55554f}.ds-field input{height:40px;padding:0 12px;border:1px solid #c4c4c0;border-radius:3px;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;color:#0e0e0d;outline:none;transition:border-color .2s,box-shadow .2s}.ds-field input:hover{border-color:#6d6d69}.ds-field input:focus{border-color:#0047ab;box-shadow:0 0 0 3px rgb(0 71 171/.15)}"
+      "refersTo": "field",
+      "description": "Labelled text field with the accent focus ring.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field__label\">Add line · part name</span><input class=\"ds-field__input\" placeholder=\"e.g. Oil Filter\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: 'Alexandria Variable', system-ui, sans-serif; } .ds-field__label { font-size: 12px; font-weight: 500; color: var(--fg-muted, #4a5b6b); } .ds-field__input { height: 44px; padding: 0 14px; border: 1px solid var(--line, #dce6ea); border-radius: 10px; background: var(--surface, #fff); color: var(--fg, #0f1c2b); font: 400 14px 'Alexandria Variable', system-ui, sans-serif; outline: none; transition: border-color 200ms, box-shadow 200ms; } .ds-field__input::placeholder { color: var(--fg-subtle, #5f6f7d); } .ds-field__input:focus { border-color: var(--accent, #0f7f56); box-shadow: 0 0 0 4px var(--accent-soft, #e3f4ec); }"
     },
     {
-      "name": "Register Tabs",
+      "name": "Pipeline Navigation",
       "kind": "nav",
-      "refersTo": "register-tab-active",
-      "description": "Catalogue thumb-index navigation with numbered balloons.",
-      "html": "<nav class=\"ds-tabs\"><a class=\"is-active\"><i>1</i>Cars &amp; Products</a><a><i>2</i>National ID Reader</a><a><i>3</i>Traders Map</a></nav>",
-      "css": ".ds-tabs{display:flex;border-bottom:2px solid #0e0e0d;font:600 14px/1 'Archivo Variable',sans-serif}.ds-tabs a{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;color:#3f3f3b;margin-bottom:-2px;cursor:pointer}.ds-tabs a:hover{background:#f6f6f5;color:#0e0e0d}.ds-tabs a.is-active{background:#0e0e0d;color:#fff}.ds-tabs i{display:grid;place-items:center;width:20px;height:20px;border:1px solid currentColor;border-radius:50%;font-style:normal;font-size:10px}.ds-tabs a.is-active i{background:#fff;color:#0e0e0d}"
+      "refersTo": "pipeline",
+      "description": "Three valves on one pipe; water runs to the active tool.",
+      "html": "<nav class=\"ds-pipeline\"><span class=\"ds-pipeline__pipe\"><span class=\"ds-pipeline__water\"></span></span><a class=\"ds-valve\" style=\"--tool:#0f7f56\"><span class=\"ds-valve__dot\">1</span>Cars &amp; Products</a><a class=\"ds-valve is-active\" style=\"--tool:#2563d8\"><span class=\"ds-valve__dot\">2</span>National ID Reader</a><a class=\"ds-valve\" style=\"--tool:#c4410d\"><span class=\"ds-valve__dot\">3</span>Traders Map</a></nav>",
+      "css": ".ds-pipeline { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); width: 480px; max-width: 100%; font-family: 'Alexandria Variable', system-ui, sans-serif; } .ds-pipeline__pipe { position: absolute; left: 16.66%; right: 16.66%; top: 15px; height: 10px; border-radius: 9999px; background: var(--pipe-steel, #9fb2bd); } .ds-pipeline__water { position: absolute; inset: 0 50% 0 0; border-radius: 9999px; background: #2563d8 repeating-linear-gradient(90deg, transparent 0 16px, rgb(255 255 255 / 0.28) 16px 22px, transparent 22px 28px); animation: ds-flow 900ms linear infinite; } @keyframes ds-flow { to { background-position-x: 28px; } } .ds-valve { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--fg-muted, #4a5b6b); text-decoration: none; cursor: pointer; } .ds-valve__dot { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line-strong, #b7c7ce); background: var(--surface, #fff); font-size: 12px; transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-valve:hover .ds-valve__dot { border-color: var(--tool); color: var(--tool); } .ds-valve.is-active { color: var(--fg, #0f1c2b); } .ds-valve.is-active .ds-valve__dot { border-color: var(--tool); background: var(--tool); color: #fff; scale: 1.1; }"
     },
     {
-      "name": "Numbered Balloon",
-      "kind": "custom",
-      "refersTo": "balloon",
-      "description": "Cross-reference marker; fills cobalt when either end is hovered.",
-      "html": "<span class=\"ds-balloon\">3</span><span class=\"ds-balloon is-on\">4</span>",
-      "css": ".ds-balloon{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:8px;border:1.5px solid #0e0e0d;border-radius:50%;background:#fff;color:#0e0e0d;font:700 11px/1 'Archivo Variable',sans-serif;font-variant-numeric:tabular-nums;transition:background-color .2s,color .2s}.ds-balloon:hover,.ds-balloon.is-on{background:#0047ab;border-color:#0047ab;color:#fff}"
-    },
-    {
-      "name": "Inspection Stamp",
+      "name": "Numbered Tag",
       "kind": "chip",
-      "description": "Verdict for a cross-check.",
-      "html": "<span class=\"ds-stamp ds-pass\">Pass</span> <span class=\"ds-stamp ds-fail\">Fail</span>",
-      "css": ".ds-stamp{display:inline-flex;align-items:center;height:24px;padding:0 10px;border:1.5px solid;font:700 11px/1 'Archivo Variable',sans-serif;letter-spacing:.08em;text-transform:uppercase}.ds-pass{border-color:#17753a;color:#115c2d}.ds-fail{border-color:#c0141c;color:#9a0f16}"
+      "refersTo": "tag",
+      "description": "Links a value to the same value elsewhere; solid when active.",
+      "html": "<span class=\"ds-tag\">3</span> <span class=\"ds-tag is-active\">6</span>",
+      "css": ".ds-tag { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 9999px; background: var(--accent-soft, #fdede5); color: var(--accent-strong, #9e340a); font: 600 11px/1 'Alexandria Variable', system-ui, sans-serif; font-variant-numeric: tabular-nums; transition: all 200ms; } .ds-tag.is-active { background: var(--accent, #c4410d); color: var(--on-accent, #fff); box-shadow: 0 0 0 3px var(--accent-soft, #fdede5); }"
+    },
+    {
+      "name": "Page Header Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Every tool opens with title, brief and stat chips beside its illustration.",
+      "html": "<header class=\"ds-panel\"><div><h1 class=\"ds-panel__title\">Cars &amp; Products</h1><p class=\"ds-panel__brief\">Price product lines per vehicle; every total updates as you type.</p><div class=\"ds-chips\"><span class=\"ds-chip\">Vehicles <b>4</b></span><span class=\"ds-chip\">Grand total, EGP <b>24,065.24</b></span></div></div><svg class=\"ds-panel__art\" viewBox=\"0 0 120 60\" aria-hidden=\"true\"><path d=\"M8 20h40a12 12 0 0 1 12 12v18\" fill=\"none\" stroke=\"var(--pipe-steel, #9fb2bd)\" stroke-width=\"8\" stroke-linecap=\"round\"/><path d=\"M8 20h40a12 12 0 0 1 12 12v18\" fill=\"none\" stroke=\"var(--accent, #0f7f56)\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-dasharray=\"10 7\"/><circle cx=\"92\" cy=\"40\" r=\"14\" fill=\"var(--accent-soft, #e3f4ec)\"/></svg></header>",
+      "css": ".ds-panel { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 28px; border: 1px solid var(--line, #dce6ea); border-radius: 18px; background: linear-gradient(to left, var(--accent-soft, #e3f4ec), transparent 40%), var(--surface, #fff); box-shadow: 0 1px 2px hsl(212 40% 12% / 0.06), 0 10px 28px -14px hsl(212 40% 12% / 0.18); font-family: 'Alexandria Variable', system-ui, sans-serif; } .ds-panel__title { margin: 0; font-size: 34px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; color: var(--fg, #0f1c2b); } .ds-panel__brief { margin: 8px 0 0; max-width: 62ch; font-size: 15px; line-height: 1.625; color: var(--fg-muted, #4a5b6b); } .ds-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; } .ds-chip { display: inline-flex; align-items: baseline; gap: 8px; padding: 6px 16px 6px 14px; border: 1px solid var(--line, #dce6ea); border-radius: 9999px; background: var(--surface-2, #eaf1f3); font-size: 12px; color: var(--fg-muted, #4a5b6b); } .ds-chip b { font-size: 14px; font-weight: 600; color: var(--fg, #0f1c2b); font-variant-numeric: tabular-nums; } .ds-panel__art { width: 200px; flex-shrink: 0; }"
+    },
+    {
+      "name": "Water-Drop Marker",
+      "kind": "custom",
+      "refersTo": "trader-pin",
+      "description": "Map marker in hot-water orange carrying the trader number; lifts on hover.",
+      "html": "<span class=\"ds-pin\"><svg viewBox=\"0 0 30 40\" aria-hidden=\"true\"><path d=\"M15 39C15 39 3 26 3 15a12 12 0 0 1 24 0c0 11-12 24-12 24Z\" fill=\"currentColor\"/><circle cx=\"15\" cy=\"15\" r=\"8.5\" fill=\"#fff\"/></svg><span class=\"ds-pin__n\">7</span></span>",
+      "css": ".ds-pin { position: relative; display: inline-block; width: 30px; height: 40px; color: var(--pipe-orange, #c4410d); transform-origin: 50% 100%; filter: drop-shadow(0 4px 4px hsl(212 40% 12% / 0.35)); transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms; cursor: pointer; } .ds-pin svg { display: block; width: 100%; height: 100%; } .ds-pin__n { position: absolute; inset: 0 0 auto 0; height: 30px; text-align: center; font: 600 11px/30px 'Alexandria Variable', system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--pipe-orange-strong, #9e340a); } .ds-pin:hover { transform: translateY(-3px) scale(1.1); }"
     }
   ],
   "narrative": {
-    "northStar": "The Product Data Sheet",
-    "overview": "Every screen is a sheet from a German industrial catalogue: a title block, register tabs, hairline-ruled specification tables, and numbered balloons that cross-reference one thing to another. The design's job is to make derivation visible. Density is welcome; decoration is not.",
+    "northStar": "Pipe Colour Code",
+    "overview": "EGIC makes water supply and drainage systems, and every installer knows pipes by colour. The toolkit uses that code: each tool runs on its own pipe colour, the header is a pipeline with a valve per tool, and work flows along pipes from where it comes in to where the result lands. Pricing runs on supply green, the National ID reader on cold-water blue, the traders map on hot-water orange. Picking a tool sends water down the header pipe to its valve, and the whole page picks up that colour.\n\nThe feel is soft and modern: white panels with pipe-bend corners on a water-white canvas, pill-shaped controls like pipe segments, and flat drawings of each tool's pipe run. There is a light theme (\"water-white\") and a dark theme (\"duct-navy\") on one token set. The toggle floods the screen in the new theme from the button outward. Colour is warm and plentiful, but the data stays dense: tables keep tight rows, tabular figures and right-aligned money, because staff do exact, repetitive work.\n\nThis world replaced an earlier monochrome \"DIN product data sheet\" design. The user wanted more colour and warmth, a softer and more modern shape language, graphics, and both themes. From that design it kept the purposeful animations and the dense tables.",
     "keyCharacteristics": [
-      "White sheet ground, ink-black section rules, hairline row rules.",
-      "Condensed uppercase Archivo for sheet and section titles; tabular figures for every number.",
-      "Numbered balloons as the cross-reference device.",
-      "Catalogue cobalt reserved for actions, selection and focus.",
-      "Arabic data typeset in IBM Plex Sans Arabic beside the English UI."
+      "One accent per tool, from the pipe colour code, set on `<html data-tool>` and animated between tools.",
+      "Soft pipe-bend panels (18px), fittings (10px) for inputs and tiles, pills for buttons, chips and tags.",
+      "Flow as the recurring graphic: the pipeline nav, the ID page's connector, dashed water in the illustrations, progress bars that fill from the inlet.",
+      "Light and dark themes of equal standing, stored per browser, defaulting to the OS setting.",
+      "Dense, numeric-first tables inside the soft shell."
     ],
     "rules": [
-      { "name": "The Cobalt Means Act Rule", "body": "Cobalt appears only on something clickable, selected, focused or receiving a drop.", "section": "colors" },
-      { "name": "The Stamp Rule", "body": "Green, red and amber are verdicts, never decoration, and always come with words.", "section": "colors" },
-      { "name": "The Tabular Figures Rule", "body": "Any number a person might compare down a column uses tabular lining figures.", "section": "typography" },
-      { "name": "The Condensed Is For Titles Rule", "body": "Condensed capitals name sheets and sections only.", "section": "typography" },
-      { "name": "The Flat Sheet Rule", "body": "Nothing resting on the sheet casts a shadow; only moved or floating objects do.", "section": "elevation" }
+      {
+        "name": "The One Pipe Rule",
+        "body": "A page uses only its own tool's pipe colour as accent. The other two pipe colours appear only in the header valves.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Floor Rule",
+        "body": "Every text pair clears 4.5:1 in both themes. Deep variants exist to put pipe-coloured text on washes, not for decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Money Rule",
+        "body": "Money, quantities, IDs and coordinates always use tabular lining figures and right alignment, so columns can be compared by eye.",
+        "section": "typography"
+      },
+      {
+        "name": "The Lift Means Movement Rule",
+        "body": "The lifted shadow marks only things that float or move (a dragged part, a popup, a toast). Static content never gets it.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "Do open every sheet with the title block: condensed sheet title, brief, spec cells.",
-      "Do separate sections with a 2px Printer's Ink rule and rows with 1px Hairlines.",
-      "Do use a numbered balloon whenever a value on one surface refers to a value on another, and make hover highlight both ends.",
-      "Do set every number in tabular figures and right-align numeric columns.",
-      "Do typeset Arabic names, addresses and professions right-to-left in IBM Plex Sans Arabic.",
-      "Do keep motion to state changes: sheets slide in the direction of their tab, sections unfold by height, totals count to their new value, stamps press in; every one has a reduced-motion fallback."
+      "**Do** take the accent from `--accent` (set by `data-tool`), never a hard-coded pipe colour, inside a tool page.",
+      "**Do** read colours in scripts (WAAPI flashes, outlines) from computed CSS variables, so both themes animate correctly.",
+      "**Do** use tabular figures and right alignment for every number column.",
+      "**Do** keep panel radius 18px, field radius 10px and controls pill-shaped.",
+      "**Do** give every animation a reduced-motion path (instant or a short crossfade).",
+      "**Do** scope Leaflet overrides under `.leaflet-container`, because Leaflet's stylesheet loads after the app's."
     ],
     "donts": [
-      "Don't put content in rounded, shadowed cards; use ruled sections on the sheet.",
-      "Don't use cobalt on anything that isn't actionable, selected or focused.",
-      "Don't number sections or items that nothing cross-references.",
-      "Don't add colour fields, gradients or tinted backgrounds for emphasis; use rule weight, condensed titles and figures.",
-      "Don't use Unicode glyphs or emoji as icons; icons are 2px-stroke SVGs."
+      "**Don't** return to the monochrome, square, ruled \"data sheet\" look the user moved away from.",
+      "**Don't** use a second tool's pipe colour as an accent on another tool's page.",
+      "**Don't** loosen table density (row height, figure size) for softness; the softness lives in the shell.",
+      "**Don't** put the lifted shadow on static content.",
+      "**Don't** add a second typeface; Alexandria covers Latin, Arabic and figures."
     ]
   }
 }

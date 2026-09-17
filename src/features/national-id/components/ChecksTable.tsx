@@ -1,28 +1,30 @@
+import { AlertIcon, CheckIcon, CrossIcon } from '../../../components/ui/Icons'
 import type { ReadCheck } from '../lib/cardFields'
 
-const STAMP: Record<ReadCheck['status'], { label: string; className: string }> = {
-  pass: { label: 'Pass', className: 'border-pass-600 text-pass-700' },
-  warn: { label: 'Check', className: 'border-caution-600 text-caution-700' },
-  fail: { label: 'Fail', className: 'border-fail-600 text-fail-700' },
+const BADGE: Record<ReadCheck['status'], { label: string; className: string; Icon: typeof CheckIcon }> = {
+  pass: { label: 'Pass', className: 'bg-pass-soft text-pass', Icon: CheckIcon },
+  warn: { label: 'Check', className: 'bg-warn-soft text-warn', Icon: AlertIcon },
+  fail: { label: 'Fail', className: 'bg-fail-soft text-fail', Icon: CrossIcon },
 }
 
-/** Inspection record: each cross-check with a stamped verdict, recomputed as values are corrected. */
+/** Each cross-check with its verdict, recomputed as values are corrected; a changed verdict presses in. */
 export function ChecksTable({ checks }: { checks: ReadCheck[] }) {
   return (
-    <ul aria-live="polite" className="border-t border-ink-950">
+    <ul aria-live="polite" className="divide-y divide-line rounded-[var(--radius-bend)] border border-line">
       {checks.map((check) => {
-        const stamp = STAMP[check.status]
+        const badge = BADGE[check.status]
         return (
-          <li key={check.key} className="grid grid-cols-[4.25rem_minmax(0,1fr)] items-start gap-3 border-b border-ink-200 py-2.5">
+          <li key={check.key} className="grid grid-cols-[5.25rem_minmax(0,1fr)] items-start gap-3 px-3.5 py-3">
             <span
               key={check.status}
-              className={`inline-flex h-6 items-center justify-center border-[1.5px] text-[0.6875rem] font-bold uppercase tracking-[0.08em] motion-safe:animate-[stamp_260ms_var(--ease-out)] ${stamp.className}`}
+              className={`inline-flex h-7 items-center justify-center gap-1 rounded-full text-xs font-semibold motion-safe:animate-[stamp_260ms_var(--ease-out)] ${badge.className}`}
             >
-              {stamp.label}
+              <badge.Icon width={13} height={13} strokeWidth={2.6} />
+              {badge.label}
             </span>
             <span className="min-w-0">
-              <span className="block text-sm font-semibold text-ink-950">{check.label}</span>
-              <span className="figures block text-xs text-ink-600">{check.detail}</span>
+              <span className="block text-sm font-semibold text-fg">{check.label}</span>
+              <span className="figures block text-xs text-fg-muted">{check.detail}</span>
             </span>
           </li>
         )

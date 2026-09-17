@@ -34,8 +34,10 @@ export function AnimatedNumber({ value, format, className = '' }: AnimatedNumber
       return
     }
 
+    // Flash in the current tool's pipe colour, then settle back.
     const restingColor = getComputedStyle(element).color
-    element.animate([{ color: '#0047ab' }, { color: restingColor }], { duration: 900, easing: 'ease-out' })
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || restingColor
+    element.animate([{ color: accent }, { color: restingColor }], { duration: 900, easing: 'ease-out' })
 
     if (prefersReducedMotion()) {
       shown.current = value

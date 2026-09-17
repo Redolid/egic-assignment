@@ -90,10 +90,51 @@ export const IdCardIcon = (props: IconProps) => (
   </svg>
 )
 
+export const CrossIcon = (props: IconProps) => (
+  <svg {...base} {...props}>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </svg>
+)
+
+export const AlertIcon = (props: IconProps) => (
+  <svg {...base} {...props}>
+    <path d="M12 8v5M12 16.5v.01" />
+    <circle cx="12" cy="12" r="9" />
+  </svg>
+)
+
+export const SunIcon = (props: IconProps) => (
+  <svg {...base} {...props}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+  </svg>
+)
+
+export const MoonIcon = (props: IconProps) => (
+  <svg {...base} {...props}>
+    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+  </svg>
+)
+
+export const TagIcon = (props: IconProps) => (
+  <svg {...base} {...props}>
+    <path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9Z" />
+    <circle cx="8" cy="8" r="1.5" />
+  </svg>
+)
+
 export const PackageIcon = (props: IconProps) => (
   <svg {...base} {...props}>
     <path d="m21 8-9-5-9 5 9 5 9-5Z" />
     <path d="M3 8v8l9 5 9-5V8" />
     <path d="M12 13v8" />
+  </svg>
+)
+
+export const PrinterIcon = (props: IconProps) => (
+  <svg {...base} {...props}>
+    <path d="M7 9V3h10v6" />
+    <path d="M7 18H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+    <path d="M7 14h10v7H7z" />
   </svg>
 )

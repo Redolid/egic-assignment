@@ -26,7 +26,7 @@ interface ProductRowProps {
 
 /** Mobile label shown next to a value when the table collapses into stacked rows. */
 const MobileLabel = ({ children }: { children: string }) => (
-  <span className="spec-label pt-2 sm:hidden">{children}</span>
+  <span className="label pt-2 sm:hidden">{children}</span>
 )
 
 export function ProductRow({ carId, product, lineNumber, isNew, flashNonce, onUpdate, onDelete }: ProductRowProps) {
@@ -44,7 +44,8 @@ export function ProductRow({ carId, product, lineNumber, isNew, flashNonce, onUp
   // A merge landed on this row: wash it so the quantity change is traced to the right line.
   useEffect(() => {
     if (!flashNonce || !rowRef.current) return
-    rowRef.current.animate([{ backgroundColor: '#dae5f7' }, { backgroundColor: 'rgba(218,229,247,0)' }], {
+    const wash = getComputedStyle(document.documentElement).getPropertyValue('--accent-soft').trim()
+    rowRef.current.animate([{ backgroundColor: wash }, { backgroundColor: 'transparent' }], {
       duration: prefersReducedMotion() ? 600 : 1400,
       easing: 'ease-out',
     })
@@ -74,7 +75,7 @@ export function ProductRow({ carId, product, lineNumber, isNew, flashNonce, onUp
         setNodeRef(node)
       }}
       data-flip-id={product.id}
-      className={`relative block border-b border-ink-200 px-1 py-3 transition-opacity duration-200 sm:table-row sm:p-0 ${
+      className={`relative block border-b border-line px-1 py-3 transition-opacity duration-200 sm:table-row sm:p-0 ${
         isDragging ? 'opacity-35' : ''
       } ${playArrival ? 'animate-row-arrive' : ''}`}
     >
@@ -84,14 +85,14 @@ export function ProductRow({ carId, product, lineNumber, isNew, flashNonce, onUp
             ref={setActivatorNodeRef}
             type="button"
             aria-label={`Drag ${product.name} to another vehicle`}
-            className="grid h-8 w-5 shrink-0 cursor-grab touch-manipulation select-none place-items-center text-ink-300 transition-colors [-webkit-touch-callout:none] hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-cobalt-600 active:cursor-grabbing"
+            className="grid h-8 w-5 shrink-0 cursor-grab touch-manipulation select-none place-items-center text-line-strong transition-colors [-webkit-touch-callout:none] hover:text-fg focus-visible:outline-2 focus-visible:outline-accent active:cursor-grabbing"
             {...attributes}
             {...listeners}
           >
             <GripIcon width={14} height={14} />
           </button>
-          <span className="figures w-5 text-right text-xs font-medium text-ink-500">{lineNumber}</span>
-          <span className="font-medium break-words text-ink-950">{product.name}</span>
+          <span className="figures w-5 text-right text-xs font-medium text-fg-subtle">{lineNumber}</span>
+          <span className="font-medium break-words text-fg">{product.name}</span>
         </div>
       </td>
 

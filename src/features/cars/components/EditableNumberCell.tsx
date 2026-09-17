@@ -55,7 +55,10 @@ export function EditableNumberCell({ value, label, validate, onCommit, inputMode
   const revert = () => {
     setDraft(formatValue(value))
     setError(null)
-    inputRef.current?.animate([{ backgroundColor: '#fdf4e4' }, { backgroundColor: '#ffffff' }], {
+    const styles = getComputedStyle(document.documentElement)
+    const warn = styles.getPropertyValue('--warn-soft').trim()
+    const surface = styles.getPropertyValue('--surface').trim()
+    inputRef.current?.animate([{ backgroundColor: warn }, { backgroundColor: surface }], {
       duration: prefersReducedMotion() ? 400 : 700,
       easing: 'ease-out',
     })
@@ -85,10 +88,10 @@ export function EditableNumberCell({ value, label, validate, onCommit, inputMode
         onChange={(event) => handleChange(event.target.value)}
         onBlur={() => (error ? revert() : setDraft(formatValue(value)))}
         onKeyDown={handleKeyDown}
-        className={`figures h-8 w-28 rounded-[3px] border bg-white px-2 text-right text-sm text-ink-950 outline-none transition-[border-color,box-shadow] duration-200 focus:ring-[3px] sm:w-full ${
+        className={`figures h-8 w-28 rounded-[var(--radius-fitting)] border bg-surface px-2 text-right text-sm text-fg outline-none transition-[border-color,box-shadow] duration-200 focus:ring-[3px] sm:w-full ${
           error
-            ? 'border-fail-600 focus:ring-fail-600/15'
-            : 'border-ink-200 hover:border-ink-400 focus:border-cobalt-600 focus:ring-cobalt-600/15'
+            ? 'border-fail focus:ring-fail-soft'
+            : 'border-line hover:border-line-strong focus:border-accent focus:ring-accent-soft'
         }`}
       />
       <FieldMessage id={errorId} message={error} align="end" live />

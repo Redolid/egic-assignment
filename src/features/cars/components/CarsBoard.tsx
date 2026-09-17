@@ -9,10 +9,11 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import type { Announcements, DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import { PricingIllustration } from '../../../components/graphics/Illustrations'
 import { SheetHeader } from '../../../components/layout/SheetHeader'
 import { AnimatedNumber } from '../../../components/ui/AnimatedNumber'
 import { Button } from '../../../components/ui/Button'
-import { CheckIcon } from '../../../components/ui/Icons'
+import { CheckIcon, PrinterIcon } from '../../../components/ui/Icons'
 import { productCatalog } from '../data/productCatalog'
 import { collisionDetection } from '../dnd'
 import type { DragData, DropData } from '../dnd'
@@ -21,6 +22,7 @@ import { getFleetTotal } from '../lib/pricing'
 import { useCars } from '../state/CarsContext'
 import { CarCard } from './CarCard'
 import { DragPreview } from './DragPreview'
+import { PriceSummary } from './PriceSummary'
 import { ProductCatalog } from './ProductCatalog'
 import type { RowFlash } from './ProductTable'
 
@@ -130,56 +132,67 @@ export function CarsBoard() {
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveDrag(null)}
     >
-      <SheetHeader
-        title="Cars & Products"
-        description="Price product lines per vehicle. Drag parts from the list onto a vehicle or add a line in its section; quantities and prices edit in place and every total updates as you type."
-        cells={[
-          { label: 'Vehicles', value: cars.length },
-          { label: 'Lines', value: lineCount },
-          { label: 'Grand total, EGP', value: <AnimatedNumber value={getFleetTotal(cars)} format={formatAmount} /> },
-        ]}
-        actions={
-          <Button variant="secondary" size="sm" onClick={resetCars} className="self-end">
-            Reset demo data
-          </Button>
-        }
-      />
+      {/* The interactive board is swapped for the price summary when printing. */}
+      <div className="print:hidden">
+        <SheetHeader
+          title="Cars & Products"
+          description="Price product lines per vehicle. Drag parts from the list onto a vehicle or add a line in its panel; quantities and prices edit in place and every total updates as you type."
+          illustration={<PricingIllustration className="h-auto w-full" />}
+          cells={[
+            { label: 'Vehicles', value: cars.length },
+            { label: 'Lines', value: lineCount },
+            { label: 'Grand total, EGP', value: <AnimatedNumber value={getFleetTotal(cars)} format={formatAmount} /> },
+          ]}
+          actions={
+            <>
+              <Button variant="secondary" size="sm" onClick={() => window.print()} disabled={cars.length === 0}>
+                <PrinterIcon width={15} height={15} />
+                Print summary
+              </Button>
+              <Button variant="ghost" size="sm" onClick={resetCars}>
+                Reset demo data
+              </Button>
+            </>
+          }
+        />
 
-      {/* minmax(0,1fr) stops the scrollable parts strip from widening the column on mobile. */}
-      <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start lg:gap-10">
-        <ProductCatalog templates={productCatalog} />
+        {/* minmax(0,1fr) stops the scrollable parts strip from widening the column on mobile. */}
+        <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start">
+          <ProductCatalog templates={productCatalog} />
 
-        <section aria-label="Vehicles" className="flex flex-col gap-2">
-          {cars.map((car) => (
-            <CarCard
-              key={car.id}
-              car={car}
-              expanded={expandedIds.has(car.id)}
-              onToggle={toggle}
-              dropFlash={dropFlashes[car.id] ?? null}
-            />
-          ))}
-          <div className="border-t-2 border-ink-950" />
-        </section>
+          <section aria-label="Vehicles" className="flex flex-col gap-3">
+            {cars.map((car) => (
+              <CarCard
+                key={car.id}
+                car={car}
+                expanded={expandedIds.has(car.id)}
+                onToggle={toggle}
+                dropFlash={dropFlashes[car.id] ?? null}
+              />
+            ))}
+          </section>
+        </div>
+
+        <DragOverlay dropAnimation={null}>{activeDrag ? <DragPreview drag={activeDrag} /> : null}</DragOverlay>
+
+        <div role="status" aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-5 z-40 flex justify-center px-4">
+          {notice && (
+            <p
+              key={notice.id}
+              className={`flex items-center gap-2.5 rounded-full border border-line bg-surface py-2 pl-2 pr-4 text-sm text-fg shadow-lifted transition-[translate,opacity] ease-[var(--ease-out)] motion-reduce:transition-opacity ${
+                noticeVisible ? 'translate-y-0 opacity-100 duration-300' : 'translate-y-3 opacity-0 duration-200'
+              } starting:translate-y-4 starting:opacity-0`}
+            >
+              <span className="grid h-6 w-6 place-items-center rounded-full bg-accent text-on-accent">
+                <CheckIcon width={13} height={13} strokeWidth={3} />
+              </span>
+              {notice.text}
+            </p>
+          )}
+        </div>
       </div>
 
-      <DragOverlay dropAnimation={null}>{activeDrag ? <DragPreview drag={activeDrag} /> : null}</DragOverlay>
-
-      <div role="status" aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-5 z-40 flex justify-center px-4">
-        {notice && (
-          <p
-            key={notice.id}
-            className={`flex items-center gap-2.5 bg-ink-950 py-2.5 pl-2.5 pr-4 text-sm text-white shadow-[0_14px_30px_-12px_rgb(14_14_13/0.6)] transition-[translate,opacity] ease-[var(--ease-out)] motion-reduce:transition-opacity ${
-              noticeVisible ? 'translate-y-0 opacity-100 duration-300' : 'translate-y-3 opacity-0 duration-200'
-            } starting:translate-y-4 starting:opacity-0`}
-          >
-            <span className="grid h-5 w-5 place-items-center bg-pass-600 text-white">
-              <CheckIcon width={13} height={13} strokeWidth={3} />
-            </span>
-            {notice.text}
-          </p>
-        )}
-      </div>
+      <PriceSummary cars={cars} />
     </DndContext>
   )
 }

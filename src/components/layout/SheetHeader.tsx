@@ -8,34 +8,39 @@ export interface SpecCell {
 interface SheetHeaderProps {
   title: string
   description: ReactNode
-  /** Title-block cells on the right: short label over a value. */
+  /** The tool's pipe-run illustration. */
+  illustration: ReactNode
+  /** Summary figures shown as a row of gauges under the brief. */
   cells?: SpecCell[]
   actions?: ReactNode
 }
 
-/** The heading block every sheet opens with: condensed title and brief on the left, spec cells on the right. */
-export function SheetHeader({ title, description, cells = [], actions }: SheetHeaderProps) {
+/** Every tool opens the same way: title and brief beside its illustration, with its key figures below. */
+export function SheetHeader({ title, description, illustration, cells = [], actions }: SheetHeaderProps) {
   return (
-    <header className="grid gap-5 border-b border-ink-200 pb-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-      <div className="min-w-0">
-        <h1 className="sheet-title text-[2.5rem] text-ink-950 sm:text-[3.25rem]">{title}</h1>
-        <p className="mt-3 max-w-[62ch] text-[0.9375rem] leading-relaxed text-ink-600">{description}</p>
-      </div>
-      {(cells.length > 0 || actions) && (
-        <div className="flex flex-wrap items-stretch gap-3">
-          {cells.length > 0 && (
-            <dl className="flex border border-ink-950">
-              {cells.map((cell) => (
-                <div key={cell.label} className="min-w-[6.5rem] border-l border-ink-200 px-3 py-2 first:border-l-0">
-                  <dt className="spec-label">{cell.label}</dt>
-                  <dd className="figures mt-1 text-base font-semibold text-ink-950">{cell.value}</dd>
-                </div>
-              ))}
-            </dl>
+    <header className="panel relative overflow-hidden">
+      {/* A wash of the tool's colour behind the illustration side. */}
+      <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-2/5 bg-gradient-to-l from-accent-soft to-transparent sm:block" />
+      <div className="relative grid gap-6 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-7">
+        <div className="min-w-0">
+          <h1 className="text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] text-fg sm:text-[2.125rem]">{title}</h1>
+          <p className="mt-2 max-w-[62ch] text-[0.9375rem] leading-relaxed text-fg-muted">{description}</p>
+          {(cells.length > 0 || actions) && (
+            <div className="mt-5 flex flex-wrap items-center gap-2.5">
+              <dl className="contents">
+                {cells.map((cell) => (
+                  <div key={cell.label} className="flex items-baseline gap-2 rounded-full border border-line bg-surface-2/70 py-1.5 pl-3.5 pr-4">
+                    <dt className="text-xs text-fg-muted">{cell.label}</dt>
+                    <dd className="figures text-sm font-semibold text-fg">{cell.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              {actions}
+            </div>
           )}
-          {actions}
         </div>
-      )}
+        <div className="order-first w-40 shrink-0 sm:order-none sm:w-[15rem] lg:w-[17rem]">{illustration}</div>
+      </div>
     </header>
   )
 }

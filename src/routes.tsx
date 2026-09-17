@@ -35,9 +35,11 @@ export const TradersMapPage = lazyWithPreload(() =>
   import('./pages/TradersMapPage').then((module) => module.TradersMapPage),
 )
 
-/** Register tabs. Their order is also the spatial order used by page transitions. */
-export const NAV_ITEMS = [
-  { to: '/cars', register: 'Pricing', label: 'Cars & Products', preload: undefined },
-  { to: '/national-id', register: 'ID check', label: 'National ID Reader', preload: NationalIdPage.preload },
-  { to: '/map', register: 'Traders', label: 'Traders Map', preload: TradersMapPage.preload },
+export type ToolId = 'pricing' | 'id' | 'traders'
+
+/** The pipeline, in order. Order is also the direction pages travel in when switching tools. */
+export const NAV_ITEMS: { to: string; tool: ToolId; short: string; label: string; preload?: () => Promise<unknown> }[] = [
+  { to: '/cars', tool: 'pricing', short: 'Pricing', label: 'Cars & Products' },
+  { to: '/national-id', tool: 'id', short: 'ID check', label: 'National ID Reader', preload: NationalIdPage.preload },
+  { to: '/map', tool: 'traders', short: 'Traders', label: 'Traders Map', preload: TradersMapPage.preload },
 ]

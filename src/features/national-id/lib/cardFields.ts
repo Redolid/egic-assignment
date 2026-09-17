@@ -33,7 +33,7 @@ export const FIELD_META: Record<FieldKey, { label: string; side: CardSideName; a
 export interface ReadField {
   key: FieldKey
   value: string
-  /** 0–1, or null when the engine gives no confidence (Claude). */
+  /** 0–1, or null when the engine gives no confidence (Browser OCR). */
   confidence: number | null
   side: CardSideName
   /** Normalised [x0, y0, x1, y1] on that side's image, when the engine locates text. */

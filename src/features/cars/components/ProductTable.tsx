@@ -74,11 +74,13 @@ export function ProductTable({ carId, carName, products, flash, onUpdate, onDele
 
   if (products.length === 0) {
     return (
-      <div className="flex items-center gap-4 border border-dashed border-ink-300 px-4 py-6">
-        <PackageIcon width={22} height={22} className="shrink-0 text-ink-400" />
+      <div className="mt-2 flex items-center gap-4 rounded-[var(--radius-fitting)] border border-dashed border-line-strong bg-surface-2/50 px-4 py-5">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-strong">
+          <PackageIcon width={20} height={20} />
+        </span>
         <div>
-          <p className="text-sm font-semibold text-ink-900">No lines on this vehicle yet</p>
-          <p className="mt-0.5 text-[0.8125rem] text-ink-600">Drag a part from the parts list onto this section, or add a line below.</p>
+          <p className="text-sm font-semibold text-fg">No lines on this vehicle yet</p>
+          <p className="mt-0.5 text-[0.8125rem] text-fg-muted">Drag a part from the parts list onto this section, or add a line below.</p>
         </div>
       </div>
     )
@@ -87,18 +89,18 @@ export function ProductTable({ carId, carName, products, flash, onUpdate, onDele
   return (
     <table data-summing={summing} className="block w-full text-sm sm:table sm:table-fixed">
       <caption className="sr-only">Lines of {carName}</caption>
-      <thead className="hidden border-b border-ink-950 sm:table-header-group">
+      <thead className="hidden border-b border-line sm:table-header-group">
         <tr>
-          <th scope="col" className="spec-label py-2 pl-12 pr-3 text-left">
+          <th scope="col" className="label py-2 pl-12 pr-3 text-left">
             Line
           </th>
-          <th scope="col" className="spec-label w-28 px-2 py-2 text-right">
+          <th scope="col" className="label w-28 px-2 py-2 text-right">
             Qty
           </th>
-          <th scope="col" className="spec-label w-36 px-2 py-2 text-right">
+          <th scope="col" className="label w-36 px-2 py-2 text-right">
             Unit price, EGP
           </th>
-          <th scope="col" className="spec-label w-36 py-2 pl-2 pr-3 text-right">
+          <th scope="col" className="label w-36 py-2 pl-2 pr-3 text-right">
             Subtotal, EGP
           </th>
           <th scope="col" className="w-11 py-2">
@@ -120,11 +122,11 @@ export function ProductTable({ carId, carName, products, flash, onUpdate, onDele
           />
         ))}
       </tbody>
-      <tfoot className="block border-t-2 border-ink-950 sm:table-footer-group">
+      <tfoot className="block border-t border-line-strong sm:table-footer-group">
         <tr className="flex items-center justify-between py-3 sm:table-row sm:p-0">
           <th scope="row" colSpan={3} className="text-left sm:py-3 sm:pl-12">
-            <span className="font-semibold text-ink-950">Total</span>
-            <span className="ml-2 text-xs text-ink-600">
+            <span className="font-semibold text-fg">Total</span>
+            <span className="ml-2 text-xs text-fg-muted">
               Σ of {products.length} {products.length === 1 ? 'line' : 'lines'}
             </span>
           </th>
@@ -135,7 +137,7 @@ export function ProductTable({ carId, carName, products, flash, onUpdate, onDele
             onFocus={() => setSumming(true)}
             onBlur={() => setSumming(false)}
             title="Sum of the subtotal column"
-            className="text-right text-lg font-bold text-ink-950 outline-none focus-visible:ring-2 focus-visible:ring-cobalt-600 sm:py-3 sm:pl-2 sm:pr-3"
+            className="rounded-[var(--radius-fitting)] text-right text-lg font-semibold text-fg outline-none focus-visible:ring-2 focus-visible:ring-accent sm:py-3 sm:pl-2 sm:pr-3"
           >
             <AnimatedNumber value={getCarTotal({ products })} format={formatAmount} />
           </td>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDndContext, useDroppable } from '@dnd-kit/core'
 import { AnimatedNumber } from '../../../components/ui/AnimatedNumber'
-import { ChevronDownIcon } from '../../../components/ui/Icons'
+import { CarIcon, ChevronDownIcon } from '../../../components/ui/Icons'
 import { EASE_OUT, prefersReducedMotion } from '../../../lib/motion'
 import { carDropId } from '../dnd'
 import type { DragData, DropData } from '../dnd'
@@ -36,15 +36,16 @@ export function CarCard({ car, expanded, onToggle, dropFlash }: CarCardProps) {
   const canAccept = dragging !== undefined && !(dragging.type === 'product' && dragging.carId === car.id)
   const isTarget = canAccept && isOver
 
-  // Drop feedback: a cobalt outline ripples out from the section that received the part.
+  // Drop feedback: a ring in the pipe colour ripples out from the panel that received the part.
   useEffect(() => {
     if (!dropFlash || !sectionRef.current || prefersReducedMotion()) return
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
     sectionRef.current.animate(
       [
-        { outline: '2px solid rgb(0 71 171 / 0.8)', outlineOffset: '0px' },
-        { outline: '2px solid rgb(0 71 171 / 0)', outlineOffset: '12px' },
+        { outline: `2px solid ${accent}`, outlineOffset: '0px' },
+        { outline: '2px solid transparent', outlineOffset: '14px' },
       ],
-      { duration: 620, easing: EASE_OUT },
+      { duration: 650, easing: EASE_OUT },
     )
   }, [dropFlash])
 
@@ -66,12 +67,12 @@ export function CarCard({ car, expanded, onToggle, dropFlash }: CarCardProps) {
         setNodeRef(node)
       }}
       aria-label={car.name}
-      className={`border-t-2 transition-colors duration-200 ${
+      className={`panel overflow-hidden transition-[border-color,box-shadow,scale] duration-200 ease-[var(--ease-out)] ${
         isTarget
-          ? 'border-cobalt-600 bg-cobalt-50 outline-2 outline-cobalt-600'
+          ? 'scale-[1.01] !border-accent ring-4 ring-accent-soft'
           : canAccept
-            ? 'border-ink-950 outline-1 outline-dashed outline-ink-400 outline-offset-2'
-            : 'border-ink-950'
+            ? 'border-dashed !border-line-strong'
+            : ''
       }`}
     >
       <h2>
@@ -80,13 +81,20 @@ export function CarCard({ car, expanded, onToggle, dropFlash }: CarCardProps) {
           aria-expanded={expanded}
           aria-controls={bodyId}
           onClick={() => onToggle(car.id)}
-          className="group grid w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-x-3 py-3.5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt-600 sm:gap-x-5 sm:px-1"
+          className="group grid w-full grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-3 px-4 py-3.5 text-left transition-colors hover:bg-surface-2/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent sm:gap-x-4 sm:px-5"
         >
+          <span
+            className={`grid h-10 w-10 place-items-center rounded-full transition-colors duration-200 ${
+              isTarget ? 'bg-accent text-on-accent' : 'bg-accent-soft text-accent-strong'
+            }`}
+          >
+            <CarIcon width={20} height={20} />
+          </span>
           <span className="min-w-0">
-            <span className="block text-[1.0625rem] font-semibold leading-snug text-ink-950">{car.name}</span>
-            <span className="figures block text-xs text-ink-600">
+            <span className="block text-[1.0625rem] font-semibold leading-snug text-fg">{car.name}</span>
+            <span className="figures block text-xs text-fg-muted">
               {isTarget ? (
-                <span className="font-semibold text-cobalt-700">Release to add to this vehicle</span>
+                <span className="font-semibold text-accent-strong">Release to add to this vehicle</span>
               ) : (
                 <>
                   {lineCount} {lineCount === 1 ? 'line' : 'lines'} · {unitCount} {unitCount === 1 ? 'unit' : 'units'}
@@ -95,10 +103,10 @@ export function CarCard({ car, expanded, onToggle, dropFlash }: CarCardProps) {
             </span>
           </span>
           <span className="text-right">
-            <span className="spec-label block">Total, EGP</span>
-            <AnimatedNumber value={getCarTotal(car)} format={formatAmount} className="block text-lg font-bold text-ink-950" />
+            <span className="label block">Total, EGP</span>
+            <AnimatedNumber value={getCarTotal(car)} format={formatAmount} className="block text-lg font-semibold text-fg" />
           </span>
-          <span className="grid h-8 w-8 place-items-center border border-ink-200 text-ink-700 transition-colors group-hover:border-ink-950 group-hover:bg-ink-950 group-hover:text-white">
+          <span className="grid h-9 w-9 place-items-center rounded-full border border-line text-fg-muted transition-colors group-hover:border-accent group-hover:bg-accent-soft group-hover:text-accent-strong">
             <ChevronDownIcon
               width={16}
               height={16}
@@ -122,7 +130,7 @@ export function CarCard({ car, expanded, onToggle, dropFlash }: CarCardProps) {
       >
         <div className="min-h-0 overflow-hidden">
           <div
-            className={`flex flex-col gap-3 pb-6 transition-[translate,opacity] motion-reduce:transition-opacity ${
+            className={`flex flex-col gap-4 border-t border-line px-3 pb-4 pt-2 transition-[translate,opacity] motion-reduce:transition-opacity sm:px-5 sm:pb-5 ${
               expanded
                 ? 'translate-y-0 opacity-100 delay-[40ms] duration-[380ms] ease-[var(--ease-out)]'
                 : '-translate-y-3 opacity-0 duration-[180ms] ease-[var(--ease-in)]'
